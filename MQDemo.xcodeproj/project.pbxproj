@@ -1,0 +1,552 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4BAD57F41FB1137F003ECF99 /* InstructionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD57F31FB1137F003ECF99 /* InstructionsTableViewCell.swift */; };
+		C52977791FACD30D00818336 /* DestinationUpdaterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52977781FACD30D00818336 /* DestinationUpdaterProtocol.swift */; };
+		C54F11171FC387D2007328C5 /* MQDemoOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54F11151FC387D2007328C5 /* MQDemoOptions.swift */; };
+		C54F11181FC387D2007328C5 /* RouteNameAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54F11161FC387D2007328C5 /* RouteNameAnnotation.swift */; };
+		C56420031FAA5CE600CCAC91 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5641FF21FAA5CE600CCAC91 /* AppDelegate.swift */; };
+		C56420041FAA5CE600CCAC91 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5641FF31FAA5CE600CCAC91 /* Assets.xcassets */; };
+		C56420051FAA5CE600CCAC91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5641FF41FAA5CE600CCAC91 /* LaunchScreen.storyboard */; };
+		C56420061FAA5CE600CCAC91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5641FF61FAA5CE600CCAC91 /* Main.storyboard */; };
+		C56420071FAA5CE600CCAC91 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5641FF91FAA5CE600CCAC91 /* Common.swift */; };
+		C56420081FAA5CE600CCAC91 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5641FFA1FAA5CE600CCAC91 /* Info.plist */; };
+		C56420091FAA5CE600CCAC91 /* LaneMarkings.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5641FFB1FAA5CE600CCAC91 /* LaneMarkings.xcassets */; };
+		C564200A1FAA5CE600CCAC91 /* Navatars.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5641FFC1FAA5CE600CCAC91 /* Navatars.xcassets */; };
+		C56420111FAA617200CCAC91 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420101FAA617200CCAC91 /* Constants.swift */; };
+		C56420141FAA653C00CCAC91 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420131FAA653C00CCAC91 /* RootViewController.swift */; };
+		C56420161FAA667600CCAC91 /* MQManeuver+ManeuverImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420151FAA667600CCAC91 /* MQManeuver+ManeuverImage.swift */; };
+		C56420181FAA694500CCAC91 /* Destinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420171FAA694400CCAC91 /* Destinations.swift */; };
+		C564201A1FAA72B800CCAC91 /* UIView-IBAddProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420191FAA72B800CCAC91 /* UIView-IBAddProperties.swift */; };
+		C564201D1FAA764D00CCAC91 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C564201B1FAA764D00CCAC91 /* AudioManager.m */; };
+		C564204F1FAA77F500CCAC91 /* NSTimer+Block.m in Sources */ = {isa = PBXBuildFile; fileRef = C564204D1FAA77F500CCAC91 /* NSTimer+Block.m */; };
+		C56420521FAA780A00CCAC91 /* NSObject+DelayedBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = C56420511FAA780A00CCAC91 /* NSObject+DelayedBlock.m */; };
+		C56420551FAA786100CCAC91 /* MKWeakTimerTarget.m in Sources */ = {isa = PBXBuildFile; fileRef = C56420531FAA786100CCAC91 /* MKWeakTimerTarget.m */; };
+		C56420581FAA7AE000CCAC91 /* KerningLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420571FAA7AE000CCAC91 /* KerningLabel.swift */; };
+		C564205A1FAA7F4B00CCAC91 /* NavViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420591FAA7F4B00CCAC91 /* NavViewController.swift */; };
+		C564205C1FAA7F5900CCAC91 /* LaneMarkingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C564205B1FAA7F5900CCAC91 /* LaneMarkingViewController.swift */; };
+		C564205F1FAA822B00CCAC91 /* LoggingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C564205E1FAA822B00CCAC91 /* LoggingProtocol.swift */; };
+		C56420611FAB55F800CCAC91 /* LoggingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420601FAB55F800CCAC91 /* LoggingManager.swift */; };
+		C56420631FAB699E00CCAC91 /* InstructionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420621FAB699E00CCAC91 /* InstructionsViewController.swift */; };
+		C56420661FAB7D0B00CCAC91 /* DestinationAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420651FAB7D0B00CCAC91 /* DestinationAnnotations.swift */; };
+		C56420681FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420671FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift */; };
+		C573B6601FB0BA160020ECE9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C573B65F1FB0BA160020ECE9 /* README.md */; };
+		C5AE91EF1FABA20F00477390 /* RouteOverlayFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AE91EE1FABA20F00477390 /* RouteOverlayFactory.swift */; };
+		C5D8991E1FD9DEE7006F5716 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5D8991D1FD9DEE7006F5716 /* InfoPlist.strings */; };
+		C5D899321FDB0FE8006F5716 /* SearchAheadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992C1FDB0FE8006F5716 /* SearchAheadOperation.swift */; };
+		C5D899331FDB0FE8006F5716 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992D1FDB0FE8006F5716 /* SearchController.swift */; };
+		C5D899341FDB0FE8006F5716 /* SearchDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992E1FDB0FE8006F5716 /* SearchDestinationViewController.swift */; };
+		C5D899351FDB0FE8006F5716 /* TripPlanningContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992F1FDB0FE8006F5716 /* TripPlanningContainerController.swift */; };
+		C5D899361FDB0FE8006F5716 /* TripDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D899301FDB0FE8006F5716 /* TripDetailViewController.swift */; };
+		C5D899371FDB0FE8006F5716 /* TripSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D899311FDB0FE8006F5716 /* TripSearchViewController.swift */; };
+		C5D8993F1FDB118B006F5716 /* ContactsSearchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8993D1FDB118B006F5716 /* ContactsSearchOperation.swift */; };
+		C5DC55001FB4B1140076C7F1 /* raleway-bold-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FC1FB4B1140076C7F1 /* raleway-bold-webfont.ttf */; };
+		C5DC55011FB4B1140076C7F1 /* raleway-medium-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FD1FB4B1140076C7F1 /* raleway-medium-webfont.ttf */; };
+		C5DC55021FB4B1140076C7F1 /* raleway-regular-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FE1FB4B1140076C7F1 /* raleway-regular-webfont.ttf */; };
+		C5DC55031FB4B1140076C7F1 /* raleway-semibold-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FF1FB4B1140076C7F1 /* raleway-semibold-webfont.ttf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4BAD57F31FB1137F003ECF99 /* InstructionsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsTableViewCell.swift; sourceTree = "<group>"; };
+		C52977781FACD30D00818336 /* DestinationUpdaterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationUpdaterProtocol.swift; sourceTree = "<group>"; };
+		C54F11151FC387D2007328C5 /* MQDemoOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQDemoOptions.swift; sourceTree = "<group>"; };
+		C54F11161FC387D2007328C5 /* RouteNameAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteNameAnnotation.swift; sourceTree = "<group>"; };
+		C5641FC41FAA511A00CCAC91 /* MQDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MQDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C5641FF21FAA5CE600CCAC91 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C5641FF31FAA5CE600CCAC91 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C5641FF51FAA5CE600CCAC91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C5641FF71FAA5CE600CCAC91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C5641FF91FAA5CE600CCAC91 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		C5641FFA1FAA5CE600CCAC91 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C5641FFB1FAA5CE600CCAC91 /* LaneMarkings.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LaneMarkings.xcassets; sourceTree = "<group>"; };
+		C5641FFC1FAA5CE600CCAC91 /* Navatars.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Navatars.xcassets; sourceTree = "<group>"; };
+		C56420101FAA617200CCAC91 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C56420131FAA653C00CCAC91 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		C56420151FAA667600CCAC91 /* MQManeuver+ManeuverImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MQManeuver+ManeuverImage.swift"; sourceTree = "<group>"; };
+		C56420171FAA694400CCAC91 /* Destinations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Destinations.swift; sourceTree = "<group>"; };
+		C56420191FAA72B800CCAC91 /* UIView-IBAddProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView-IBAddProperties.swift"; sourceTree = "<group>"; };
+		C564201B1FAA764D00CCAC91 /* AudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioManager.m; sourceTree = "<group>"; };
+		C564201C1FAA764D00CCAC91 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioManager.h; sourceTree = "<group>"; };
+		C564201E1FAA766600CCAC91 /* MQDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MQDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		C564204D1FAA77F500CCAC91 /* NSTimer+Block.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+Block.m"; sourceTree = "<group>"; };
+		C564204E1FAA77F500CCAC91 /* NSTimer+Block.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+Block.h"; sourceTree = "<group>"; };
+		C56420501FAA780A00CCAC91 /* NSObject+DelayedBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+DelayedBlock.h"; sourceTree = "<group>"; };
+		C56420511FAA780A00CCAC91 /* NSObject+DelayedBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+DelayedBlock.m"; sourceTree = "<group>"; };
+		C56420531FAA786100CCAC91 /* MKWeakTimerTarget.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MKWeakTimerTarget.m; sourceTree = "<group>"; };
+		C56420541FAA786100CCAC91 /* MKWeakTimerTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MKWeakTimerTarget.h; sourceTree = "<group>"; };
+		C56420571FAA7AE000CCAC91 /* KerningLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KerningLabel.swift; sourceTree = "<group>"; };
+		C56420591FAA7F4B00CCAC91 /* NavViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavViewController.swift; sourceTree = "<group>"; };
+		C564205B1FAA7F5900CCAC91 /* LaneMarkingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneMarkingViewController.swift; sourceTree = "<group>"; };
+		C564205E1FAA822B00CCAC91 /* LoggingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingProtocol.swift; sourceTree = "<group>"; };
+		C56420601FAB55F800CCAC91 /* LoggingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggingManager.swift; sourceTree = "<group>"; };
+		C56420621FAB699E00CCAC91 /* InstructionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsViewController.swift; sourceTree = "<group>"; };
+		C56420651FAB7D0B00CCAC91 /* DestinationAnnotations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationAnnotations.swift; sourceTree = "<group>"; };
+		C56420671FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteHighlightPolyline.swift; sourceTree = "<group>"; };
+		C573B65F1FB0BA160020ECE9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C5AE91EE1FABA20F00477390 /* RouteOverlayFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteOverlayFactory.swift; sourceTree = "<group>"; };
+		C5D8991D1FD9DEE7006F5716 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
+		C5D8992C1FDB0FE8006F5716 /* SearchAheadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchAheadOperation.swift; sourceTree = "<group>"; };
+		C5D8992D1FDB0FE8006F5716 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		C5D8992E1FDB0FE8006F5716 /* SearchDestinationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchDestinationViewController.swift; path = "Trip Editor/SearchDestinationViewController.swift"; sourceTree = "<group>"; };
+		C5D8992F1FDB0FE8006F5716 /* TripPlanningContainerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripPlanningContainerController.swift; path = "Trip Editor/TripPlanningContainerController.swift"; sourceTree = "<group>"; };
+		C5D899301FDB0FE8006F5716 /* TripDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripDetailViewController.swift; path = "Trip Editor/TripDetailViewController.swift"; sourceTree = "<group>"; };
+		C5D899311FDB0FE8006F5716 /* TripSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripSearchViewController.swift; path = "Trip Editor/TripSearchViewController.swift"; sourceTree = "<group>"; };
+		C5D8993D1FDB118B006F5716 /* ContactsSearchOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsSearchOperation.swift; sourceTree = "<group>"; };
+		C5DC54FC1FB4B1140076C7F1 /* raleway-bold-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-bold-webfont.ttf"; sourceTree = "<group>"; };
+		C5DC54FD1FB4B1140076C7F1 /* raleway-medium-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-medium-webfont.ttf"; sourceTree = "<group>"; };
+		C5DC54FE1FB4B1140076C7F1 /* raleway-regular-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-regular-webfont.ttf"; sourceTree = "<group>"; };
+		C5DC54FF1FB4B1140076C7F1 /* raleway-semibold-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-semibold-webfont.ttf"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C5641FC11FAA511A00CCAC91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C5641FBB1FAA511A00CCAC91 = {
+			isa = PBXGroup;
+			children = (
+				C573B65F1FB0BA160020ECE9 /* README.md */,
+				C5641FF11FAA5CE600CCAC91 /* MQDemo */,
+				C5641FC51FAA511A00CCAC91 /* Products */,
+				F7A8B2E3A162519456FDCE99 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		C5641FC51FAA511A00CCAC91 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C5641FC41FAA511A00CCAC91 /* MQDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C5641FF11FAA5CE600CCAC91 /* MQDemo */ = {
+			isa = PBXGroup;
+			children = (
+				C564205D1FAA821300CCAC91 /* Logging */,
+				C56420121FAA64C600CCAC91 /* Nav Screen */,
+				C5641FF21FAA5CE600CCAC91 /* AppDelegate.swift */,
+				C5641FF41FAA5CE600CCAC91 /* LaunchScreen.storyboard */,
+				C5641FF61FAA5CE600CCAC91 /* Main.storyboard */,
+				C5641FF81FAA5CE600CCAC91 /* Helpers */,
+				C5DC54FB1FB4B1140076C7F1 /* Fonts */,
+				C5641FF31FAA5CE600CCAC91 /* Assets.xcassets */,
+				C5641FFB1FAA5CE600CCAC91 /* LaneMarkings.xcassets */,
+				C5641FFC1FAA5CE600CCAC91 /* Navatars.xcassets */,
+				C564201E1FAA766600CCAC91 /* MQDemo-Bridging-Header.h */,
+				C5641FFA1FAA5CE600CCAC91 /* Info.plist */,
+				C5D8991D1FD9DEE7006F5716 /* InfoPlist.strings */,
+			);
+			path = MQDemo;
+			sourceTree = "<group>";
+		};
+		C5641FF81FAA5CE600CCAC91 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				C56420561FAA7A1800CCAC91 /* AudioManager */,
+				C5641FF91FAA5CE600CCAC91 /* Common.swift */,
+				C56420101FAA617200CCAC91 /* Constants.swift */,
+				C56420151FAA667600CCAC91 /* MQManeuver+ManeuverImage.swift */,
+				C56420191FAA72B800CCAC91 /* UIView-IBAddProperties.swift */,
+				C56420571FAA7AE000CCAC91 /* KerningLabel.swift */,
+				C5AE91EE1FABA20F00477390 /* RouteOverlayFactory.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		C56420121FAA64C600CCAC91 /* Nav Screen */ = {
+			isa = PBXGroup;
+			children = (
+				C5D8992E1FDB0FE8006F5716 /* SearchDestinationViewController.swift */,
+				C5D899301FDB0FE8006F5716 /* TripDetailViewController.swift */,
+				C5D8992F1FDB0FE8006F5716 /* TripPlanningContainerController.swift */,
+				C5D899311FDB0FE8006F5716 /* TripSearchViewController.swift */,
+				C5D8992B1FDB0FE8006F5716 /* SearchController */,
+				C56420641FAB6C3700CCAC91 /* Model */,
+				C56420131FAA653C00CCAC91 /* RootViewController.swift */,
+				C56420591FAA7F4B00CCAC91 /* NavViewController.swift */,
+				C564205B1FAA7F5900CCAC91 /* LaneMarkingViewController.swift */,
+				C56420621FAB699E00CCAC91 /* InstructionsViewController.swift */,
+				4BAD57F31FB1137F003ECF99 /* InstructionsTableViewCell.swift */,
+			);
+			path = "Nav Screen";
+			sourceTree = "<group>";
+		};
+		C56420561FAA7A1800CCAC91 /* AudioManager */ = {
+			isa = PBXGroup;
+			children = (
+				C56420541FAA786100CCAC91 /* MKWeakTimerTarget.h */,
+				C56420531FAA786100CCAC91 /* MKWeakTimerTarget.m */,
+				C564204E1FAA77F500CCAC91 /* NSTimer+Block.h */,
+				C564204D1FAA77F500CCAC91 /* NSTimer+Block.m */,
+				C56420501FAA780A00CCAC91 /* NSObject+DelayedBlock.h */,
+				C56420511FAA780A00CCAC91 /* NSObject+DelayedBlock.m */,
+				C564201C1FAA764D00CCAC91 /* AudioManager.h */,
+				C564201B1FAA764D00CCAC91 /* AudioManager.m */,
+			);
+			path = AudioManager;
+			sourceTree = "<group>";
+		};
+		C564205D1FAA821300CCAC91 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				C564205E1FAA822B00CCAC91 /* LoggingProtocol.swift */,
+				C56420601FAB55F800CCAC91 /* LoggingManager.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		C56420641FAB6C3700CCAC91 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C54F11151FC387D2007328C5 /* MQDemoOptions.swift */,
+				C54F11161FC387D2007328C5 /* RouteNameAnnotation.swift */,
+				C56420171FAA694400CCAC91 /* Destinations.swift */,
+				C56420651FAB7D0B00CCAC91 /* DestinationAnnotations.swift */,
+				C56420671FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift */,
+				C52977781FACD30D00818336 /* DestinationUpdaterProtocol.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C5D8992B1FDB0FE8006F5716 /* SearchController */ = {
+			isa = PBXGroup;
+			children = (
+				C5D8993D1FDB118B006F5716 /* ContactsSearchOperation.swift */,
+				C5D8992C1FDB0FE8006F5716 /* SearchAheadOperation.swift */,
+				C5D8992D1FDB0FE8006F5716 /* SearchController.swift */,
+			);
+			name = SearchController;
+			path = "Trip Editor/SearchController";
+			sourceTree = "<group>";
+		};
+		C5DC54FB1FB4B1140076C7F1 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				C5DC54FC1FB4B1140076C7F1 /* raleway-bold-webfont.ttf */,
+				C5DC54FD1FB4B1140076C7F1 /* raleway-medium-webfont.ttf */,
+				C5DC54FE1FB4B1140076C7F1 /* raleway-regular-webfont.ttf */,
+				C5DC54FF1FB4B1140076C7F1 /* raleway-semibold-webfont.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		F7A8B2E3A162519456FDCE99 /* Frameworks */ = {
+			isa = PBXGroup;
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C5641FC31FAA511A00CCAC91 /* MQDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C5641FD61FAA511A00CCAC91 /* Build configuration list for PBXNativeTarget "MQDemo" */;
+			buildPhases = (
+				C5641FC01FAA511A00CCAC91 /* Sources */,
+				C5641FC11FAA511A00CCAC91 /* Frameworks */,
+				C5641FC21FAA511A00CCAC91 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MQDemo;
+			productName = "MQ Navigation Reference";
+			productReference = C5641FC41FAA511A00CCAC91 /* MQDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C5641FBC1FAA511A00CCAC91 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0910;
+				LastUpgradeCheck = 0910;
+				ORGANIZATIONNAME = Mapquest;
+				TargetAttributes = {
+					C5641FC31FAA511A00CCAC91 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = C5641FBF1FAA511A00CCAC91 /* Build configuration list for PBXProject "MQDemo" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C5641FBB1FAA511A00CCAC91;
+			productRefGroup = C5641FC51FAA511A00CCAC91 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C5641FC31FAA511A00CCAC91 /* MQDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C5641FC21FAA511A00CCAC91 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C56420081FAA5CE600CCAC91 /* Info.plist in Resources */,
+				C5D8991E1FD9DEE7006F5716 /* InfoPlist.strings in Resources */,
+				C5DC55031FB4B1140076C7F1 /* raleway-semibold-webfont.ttf in Resources */,
+				C5DC55001FB4B1140076C7F1 /* raleway-bold-webfont.ttf in Resources */,
+				C56420061FAA5CE600CCAC91 /* Main.storyboard in Resources */,
+				C56420091FAA5CE600CCAC91 /* LaneMarkings.xcassets in Resources */,
+				C56420041FAA5CE600CCAC91 /* Assets.xcassets in Resources */,
+				C56420051FAA5CE600CCAC91 /* LaunchScreen.storyboard in Resources */,
+				C5DC55011FB4B1140076C7F1 /* raleway-medium-webfont.ttf in Resources */,
+				C5DC55021FB4B1140076C7F1 /* raleway-regular-webfont.ttf in Resources */,
+				C573B6601FB0BA160020ECE9 /* README.md in Resources */,
+				C564200A1FAA5CE600CCAC91 /* Navatars.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C5641FC01FAA511A00CCAC91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C5D899361FDB0FE8006F5716 /* TripDetailViewController.swift in Sources */,
+				C564201D1FAA764D00CCAC91 /* AudioManager.m in Sources */,
+				C56420631FAB699E00CCAC91 /* InstructionsViewController.swift in Sources */,
+				C56420681FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift in Sources */,
+				C5D899351FDB0FE8006F5716 /* TripPlanningContainerController.swift in Sources */,
+				C56420611FAB55F800CCAC91 /* LoggingManager.swift in Sources */,
+				C56420141FAA653C00CCAC91 /* RootViewController.swift in Sources */,
+				C56420551FAA786100CCAC91 /* MKWeakTimerTarget.m in Sources */,
+				C5D899331FDB0FE8006F5716 /* SearchController.swift in Sources */,
+				C56420181FAA694500CCAC91 /* Destinations.swift in Sources */,
+				C56420521FAA780A00CCAC91 /* NSObject+DelayedBlock.m in Sources */,
+				C564205F1FAA822B00CCAC91 /* LoggingProtocol.swift in Sources */,
+				C5D899341FDB0FE8006F5716 /* SearchDestinationViewController.swift in Sources */,
+				C56420161FAA667600CCAC91 /* MQManeuver+ManeuverImage.swift in Sources */,
+				C56420071FAA5CE600CCAC91 /* Common.swift in Sources */,
+				C564205A1FAA7F4B00CCAC91 /* NavViewController.swift in Sources */,
+				C5AE91EF1FABA20F00477390 /* RouteOverlayFactory.swift in Sources */,
+				C54F11171FC387D2007328C5 /* MQDemoOptions.swift in Sources */,
+				C56420581FAA7AE000CCAC91 /* KerningLabel.swift in Sources */,
+				C56420661FAB7D0B00CCAC91 /* DestinationAnnotations.swift in Sources */,
+				C564204F1FAA77F500CCAC91 /* NSTimer+Block.m in Sources */,
+				C564205C1FAA7F5900CCAC91 /* LaneMarkingViewController.swift in Sources */,
+				4BAD57F41FB1137F003ECF99 /* InstructionsTableViewCell.swift in Sources */,
+				C56420031FAA5CE600CCAC91 /* AppDelegate.swift in Sources */,
+				C5D899321FDB0FE8006F5716 /* SearchAheadOperation.swift in Sources */,
+				C564201A1FAA72B800CCAC91 /* UIView-IBAddProperties.swift in Sources */,
+				C56420111FAA617200CCAC91 /* Constants.swift in Sources */,
+				C52977791FACD30D00818336 /* DestinationUpdaterProtocol.swift in Sources */,
+				C54F11181FC387D2007328C5 /* RouteNameAnnotation.swift in Sources */,
+				C5D8993F1FDB118B006F5716 /* ContactsSearchOperation.swift in Sources */,
+				C5D899371FDB0FE8006F5716 /* TripSearchViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C5641FF41FAA5CE600CCAC91 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C5641FF51FAA5CE600CCAC91 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		C5641FF61FAA5CE600CCAC91 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C5641FF71FAA5CE600CCAC91 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C5641FD41FAA511A00CCAC91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		C5641FD51FAA511A00CCAC91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_BITCODE = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C5641FD71FAA511A00CCAC91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J2244V2577;
+				INFOPLIST_FILE = "$(SRCROOT)/MQDemo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapquest.sample.MQ-Navigation-Reference";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/MQDemo-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C5641FD81FAA511A00CCAC91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J2244V2577;
+				INFOPLIST_FILE = "$(SRCROOT)/MQDemo/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapquest.sample.MQ-Navigation-Reference";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/MQDemo-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C5641FBF1FAA511A00CCAC91 /* Build configuration list for PBXProject "MQDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C5641FD41FAA511A00CCAC91 /* Debug */,
+				C5641FD51FAA511A00CCAC91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C5641FD61FAA511A00CCAC91 /* Build configuration list for PBXNativeTarget "MQDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C5641FD71FAA511A00CCAC91 /* Debug */,
+				C5641FD81FAA511A00CCAC91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C5641FBC1FAA511A00CCAC91 /* Project object */;
+}
