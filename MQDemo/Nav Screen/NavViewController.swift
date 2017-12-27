@@ -297,20 +297,6 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
                          distanceRemaining: lastLocationObservation.remainingLegDistance,
                          trafficOverview: selectedRoute.trafficOverview)
         
-        guard MQDemoOptions.shared.promptsAudio == .always else { return }
-        var shortDateFormatter: DateFormatter = {
-            let formatter = DateFormatter()
-            let shortDateFormat = DateFormatter.dateFormat(fromTemplate: "h:mm a", options: 0, locale: Locale.current)
-            formatter.dateFormat = shortDateFormat
-            return formatter
-        }()
-
-        //Speak the arrival time
-        let arrivalTime = Date(timeIntervalSinceNow: currentLegETA)
-        let arrivalTimeString = shortDateFormatter.string(from: arrivalTime).lowercased()
-        let minutesETA = duration(forRouteTime: currentLegETA)
-
-        audioManager.playText("New ETA \(arrivalTimeString) in \(minutesETA)") { (success) in }
     }
     
     //MARK: Internal Controller
@@ -812,7 +798,21 @@ extension NavViewController: MQNavigationManagerDelegate {
     /// The Navigation Manager has updated the ETA with a new one
     func navigationManagerDidUpdateETA(_ navigationManager: MQNavigationManager, withETAByRouteLegId etaByRouteLegId: [String : MQEstimatedTimeOfArrival]) {
         updateETA()
-        AudioServicesPlaySystemSound (1057)
+        
+        guard MQDemoOptions.shared.promptsAudio == .always, let currentLegETA = navigator.currentRouteLeg?.traffic.estimatedTimeOfArrival.time?.timeIntervalSinceNow else { return }
+        let shortDateFormatter: DateFormatter = {
+            let formatter = DateFormatter()
+            let shortDateFormat = DateFormatter.dateFormat(fromTemplate: "h:mm a", options: 0, locale: Locale.current)
+            formatter.dateFormat = shortDateFormat
+            return formatter
+        }()
+
+        //Speak the arrival time
+        let arrivalTime = Date(timeIntervalSinceNow: currentLegETA)
+        let arrivalTimeString = shortDateFormatter.string(from: arrivalTime).lowercased()
+        let minutesETA = duration(forRouteTime: currentLegETA) ?? ""
+        
+        audioManager.playText("New ETA \(arrivalTimeString) in \(minutesETA)") { (success) in }
     }
     
     /// The Navigation Manager will be updating traffic
