@@ -7,7 +7,7 @@ target 'MQDemo' do
 
   pod 'MapQuestMaps', '~>3.4.1-1.1'
   pod 'MQSearchAhead', '~> 1.0.0-beta.3'
-  pod 'MQNavigation', '~> 3.1.0'
+  pod 'MQNavigation', :path => '/path/to/navigation-ios'
 
   pod 'Pulley'
   pod 'SVProgressHUD', :git => 'https://github.com/sridvijay/SVProgressHUD.git', :inhibit_warnings => true

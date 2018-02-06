@@ -13,7 +13,12 @@ libaries. Pods are included with the source, but if you make any pod-related
 changes, run the following (and commit the resulting changes):
 
     $ [sudo] sudo gem install cocoapods
-    
+
+Review `Podfile` to ensure that the `MQNavigation` pod points to the
+appropriate folder containing the Navigation SDK. For example:
+
+    pod 'MQNavigation', :path => '/path/to/navigation-ios'
+
 And then install the pods via:
 
     $ pod install
