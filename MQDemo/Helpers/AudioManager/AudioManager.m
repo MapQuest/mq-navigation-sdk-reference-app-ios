@@ -93,35 +93,7 @@ NSString* const AudioManagerAudioRouteChanged = @"AudioManagerAudioRouteChanged"
     NSString* docFolderPath = [paths objectAtIndex:0];
     _recordPath             = [docFolderPath stringByAppendingPathComponent:@"sound.m4a"];
     
-    // Speech
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
-        _voice = [AVSpeechSynthesisVoice voiceWithIdentifier:@"com.apple.ttsbundle.siri_female_en-US_premium"];
-        
-        if (_voice == nil) {
-            _voice = [AVSpeechSynthesisVoice voiceWithIdentifier:@"com.apple.ttsbundle.siri_female_en-US_compact"];
-        }
-    }
-    
-    if (_voice == nil) {
-        _voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"];
-    }
-    
-    NSAssert(_voice != nil, @"Problem…");
-    
-    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
-    if ([currSysVer floatValue] < 8.0) {
-        // iOS 7
-        // This was also hand-tuned. Why the default is no fast doesn't make much sense.
-        _utteranceRate = (AVSpeechUtteranceDefaultSpeechRate + AVSpeechUtteranceMinimumSpeechRate) / 2.0;
-
-    } else if ([currSysVer floatValue] >= 9.0) {
-        // iOS 9+ (& iOS 9 SDK)
-        _utteranceRate = 0.505;  // Seems like Apple finally fixed this in iOS 9.
-        
-    } else {
-        // iOS 8
-        _utteranceRate = 0.12; // Hand-tuned this. The default rate of 0.5 sounds insanely fast. WTF?
-    }
+    [self setupVoiceAndUtteranceRateWithLanguage:nil];
 
     // Set Defaults
     _volumeLevel = AudioVolumeLevelHigh;
@@ -171,6 +143,49 @@ NSString* const AudioManagerAudioRouteChanged = @"AudioManagerAudioRouteChanged"
     [self _tagAudioRouteInfoWithReason:@"Initial"];
 
     return self;
+}
+
+- (void)setupVoiceAndUtteranceRateWithLanguage:(NSString*)languageCode
+{
+    if (languageCode == nil) {
+        languageCode = @"en-US";
+    }
+    
+    languageCode = [languageCode stringByReplacingOccurrencesOfString:@"_" withString:@"-"];
+    
+    // Speech
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"9.0")) {
+        _voice = [AVSpeechSynthesisVoice voiceWithIdentifier:[NSString stringWithFormat:@"com.apple.ttsbundle.siri_female_%@_premium", languageCode]];
+        
+        if (_voice == nil) {
+            _voice = [AVSpeechSynthesisVoice voiceWithIdentifier:[NSString stringWithFormat:@"com.apple.ttsbundle.siri_female_%@_compact", languageCode]];
+        }
+    }
+    
+    if (_voice == nil) {
+        _voice = [AVSpeechSynthesisVoice voiceWithLanguage:languageCode];
+
+        if (_voice == nil) {
+            _voice = [AVSpeechSynthesisVoice voiceWithLanguage:@"en-US"];
+        }
+    }
+    
+    NSAssert(_voice != nil, @"Problem…");
+    
+    NSString *currSysVer = [[UIDevice currentDevice] systemVersion];
+    if ([currSysVer floatValue] < 8.0) {
+        // iOS 7
+        // This was also hand-tuned. Why the default is no fast doesn't make much sense.
+        _utteranceRate = (AVSpeechUtteranceDefaultSpeechRate + AVSpeechUtteranceMinimumSpeechRate) / 2.0;
+        
+    } else if ([currSysVer floatValue] >= 9.0) {
+        // iOS 9+ (& iOS 9 SDK)
+        _utteranceRate = 0.505;  // Seems like Apple finally fixed this in iOS 9.
+        
+    } else {
+        // iOS 8
+        _utteranceRate = 0.12; // Hand-tuned this. The default rate of 0.5 sounds insanely fast.
+    }
 }
 
 
@@ -255,7 +270,7 @@ NSString* const AudioManagerAudioRouteChanged = @"AudioManagerAudioRouteChanged"
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
--(void)playAudio:(NSData*)audioData text:(NSString*)text completion:(PlayAudioCompletion)block
+-(void)playAudio:(NSData*)audioData text:(NSString*)text language:(nullable NSString*)languageCode completion:(PlayAudioCompletion)block
 {
     if (_volumeLevel == AudioVolumeLevelMute) {
         block(NO);
@@ -263,7 +278,7 @@ NSString* const AudioManagerAudioRouteChanged = @"AudioManagerAudioRouteChanged"
     }
     
     if (!audioData) {
-        [self playText:text completion:block];
+        [self playText:text language:languageCode completion:block];
         return;
     }
 
@@ -271,7 +286,7 @@ NSString* const AudioManagerAudioRouteChanged = @"AudioManagerAudioRouteChanged"
         if (!successful) {
             block(NO);
         } else if (text) {
-            [self playText:text completion:block];
+            [self playText:text language:languageCode completion:block];
         }
     }];
 }
@@ -279,7 +294,7 @@ NSString* const AudioManagerAudioRouteChanged = @"AudioManagerAudioRouteChanged"
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
--(void)playText:(NSString*)text completion:(PlayAudioCompletion)block
+-(void)playText:(NSString*)text language:(nullable NSString*)languageCode completion:(PlayAudioCompletion)block
 {
     if (_volumeLevel == AudioVolumeLevelMute) {
         block(NO);
@@ -304,6 +319,7 @@ NSString* const AudioManagerAudioRouteChanged = @"AudioManagerAudioRouteChanged"
         return;
     }
 
+    [self setupVoiceAndUtteranceRateWithLanguage:languageCode];
     AVSpeechUtterance* utterance = [[AVSpeechUtterance alloc] initWithString:text];
     utterance.voice = _voice;
     utterance.rate = _utteranceRate;

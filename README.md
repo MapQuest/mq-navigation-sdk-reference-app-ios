@@ -34,18 +34,6 @@ MapQuest API Key
 Get your MapQuest access key at <https://developer.mapquest.com>.
 
 
-Tracking
----------------------------
-
-_Legal Explanation of Tracking_
-
-The Navigation SDK has two properties on `MQNavigationManager`: `trackingEnabled` and `userConsentedTracking` that control whether or not tracking is on. `trackingEnabled` is always set to true unless you have a Paid plan with Mapquest. You must also display a Mapquest-approved dialog to the user asking permission to allow tracking during navigation.
-
-Our recommended in-app disclosure language is as follows:
-> Allow collection of location information even when the app is not in use.  In addition to use for in-app features, location is shared with Oath advertising companies to help make advertising more relevant to you across the devices you use and also helps improve other products and services provided by the Verizon family of companies
-
-*Tracking is only active during an active navigation session. There is currently no approved use case whereby Verizon data collected by this SDK may be shared with a third party.*
-
 How to use this Project
 ---------------------------
 
@@ -98,17 +86,14 @@ The destination annotation shows up as an image by responding to the `mapView(:i
 
 Typically most people will drive from one location to the next, but occasionally they will setup a multi-stop route: Home -> Dry Cleaning -> Office. *MQNavigation* gives you control over what happens upon reaching each destination point. Within the demo app, the `NavViewController` notifies `RootViewController` that a destination was reached (if its not the final destination) and then it pauses navigation. Pausing navigation allows the user to select when they will continue upon the route. We set the text in the bottom view to let the user know that when they tap on the bottom view - it will resume navigation to the next destination.
 
+Tapping on the next destination label on the main screen will bring up an alert asking if you'd like to advance to the next leg. This uses the `MQNavigationManager`'s `advanceRouteToNextLeg` method. The `MQNavigationManager` provides the current route and the current leg, but that doesn't provide you with the names of the destinations or other user-information. Your host app will need to keep its own state for destinations and calculate the appropriate user-pertinent information based on `MQNavigationManager`'s properties.
+
 When writing a navigation app supporting multi-stop routes it is very important to keep the current leg of that route as a property and to not show previous legs in the instructions or route overlays. 
 
 
 ### Logging
 
 Navigation generates lots of userful information that you may want to log for support purposes. The demo app includes a fully customizable `LoggingManager` that implements our `LoggingProtocol`. You can create your own manager based on the protocol or simply use the existing manager.
-
-
-### Tracking
-
-The Navigation SDK requires you to request user consent when tracking is enabled. The reference application provides a design to showing the TOS and also allowing the user to change consent at any time before or after a navigation session. 
 
 
 Further Documentation

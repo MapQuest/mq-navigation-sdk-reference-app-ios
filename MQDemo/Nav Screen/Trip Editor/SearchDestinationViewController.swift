@@ -34,7 +34,8 @@ class SearchDestinationViewController: UIViewController, SearchParentProtocol {
     //MARK: Private Properties
     private lazy var searchController = SearchController(parent: self)
     private var routes: [MQRoute]?
-    
+    private var lastDrawerPosition = PulleyPosition.closed
+
     fileprivate var drawerBottomSafeArea: CGFloat = 0.0 {
         didSet {
             self.loadViewIfNeeded()
@@ -156,6 +157,9 @@ extension SearchDestinationViewController: PulleyDrawerViewControllerDelegate {
     // This function is called by Pulley anytime the size, drawer position, etc. changes. It's best to customize your VC UI based on the bottomSafeArea here (if needed).
     func drawerPositionDidChange(drawer: PulleyViewController, bottomSafeArea: CGFloat)
     {
+        guard lastDrawerPosition != drawer.drawerPosition else { return }
+        lastDrawerPosition = drawer.drawerPosition
+        
         if drawer.drawerPosition != .partiallyRevealed {
             updateStartNavigationButtons(display: false)
         }
@@ -262,9 +266,11 @@ extension SearchDestinationViewController: UITableViewDelegate {
             
             let destination = displayableDestinations[indexPath.row]
             MQDemoOptions.shared.addMRU(destination: destination)
-
+            
             parent.selectedNew(destination: destination)
             parent.refreshDestinations()
+            
+            searchBar.resignFirstResponder()
             
             drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
         }

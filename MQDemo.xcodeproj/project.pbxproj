@@ -16,7 +16,6 @@
 		C56420051FAA5CE600CCAC91 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5641FF41FAA5CE600CCAC91 /* LaunchScreen.storyboard */; };
 		C56420061FAA5CE600CCAC91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5641FF61FAA5CE600CCAC91 /* Main.storyboard */; };
 		C56420071FAA5CE600CCAC91 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5641FF91FAA5CE600CCAC91 /* Common.swift */; };
-		C56420081FAA5CE600CCAC91 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5641FFA1FAA5CE600CCAC91 /* Info.plist */; };
 		C56420091FAA5CE600CCAC91 /* LaneMarkings.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5641FFB1FAA5CE600CCAC91 /* LaneMarkings.xcassets */; };
 		C564200A1FAA5CE600CCAC91 /* Navatars.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5641FFC1FAA5CE600CCAC91 /* Navatars.xcassets */; };
 		C56420111FAA617200CCAC91 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420101FAA617200CCAC91 /* Constants.swift */; };
@@ -37,19 +36,22 @@
 		C56420661FAB7D0B00CCAC91 /* DestinationAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420651FAB7D0B00CCAC91 /* DestinationAnnotations.swift */; };
 		C56420681FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56420671FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift */; };
 		C573B6601FB0BA160020ECE9 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C573B65F1FB0BA160020ECE9 /* README.md */; };
+		C58D0D3F202239F60057CA98 /* ListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D35202239F60057CA98 /* ListTableViewController.swift */; };
+		C58D0D40202239F60057CA98 /* ContactsSearchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D37202239F60057CA98 /* ContactsSearchOperation.swift */; };
+		C58D0D41202239F60057CA98 /* SearchAheadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D38202239F60057CA98 /* SearchAheadOperation.swift */; };
+		C58D0D42202239F60057CA98 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D39202239F60057CA98 /* SearchController.swift */; };
+		C58D0D43202239F60057CA98 /* SearchDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D3A202239F60057CA98 /* SearchDestinationViewController.swift */; };
+		C58D0D44202239F60057CA98 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D3B202239F60057CA98 /* SwitchTableViewCell.swift */; };
+		C58D0D45202239F60057CA98 /* TripDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D3C202239F60057CA98 /* TripDetailViewController.swift */; };
+		C58D0D46202239F60057CA98 /* TripPlanningContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D3D202239F60057CA98 /* TripPlanningContainerController.swift */; };
+		C58D0D47202239F60057CA98 /* TripSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D0D3E202239F60057CA98 /* TripSearchViewController.swift */; };
 		C5AE91EF1FABA20F00477390 /* RouteOverlayFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5AE91EE1FABA20F00477390 /* RouteOverlayFactory.swift */; };
 		C5D8991E1FD9DEE7006F5716 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5D8991D1FD9DEE7006F5716 /* InfoPlist.strings */; };
-		C5D899321FDB0FE8006F5716 /* SearchAheadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992C1FDB0FE8006F5716 /* SearchAheadOperation.swift */; };
-		C5D899331FDB0FE8006F5716 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992D1FDB0FE8006F5716 /* SearchController.swift */; };
-		C5D899341FDB0FE8006F5716 /* SearchDestinationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992E1FDB0FE8006F5716 /* SearchDestinationViewController.swift */; };
-		C5D899351FDB0FE8006F5716 /* TripPlanningContainerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8992F1FDB0FE8006F5716 /* TripPlanningContainerController.swift */; };
-		C5D899361FDB0FE8006F5716 /* TripDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D899301FDB0FE8006F5716 /* TripDetailViewController.swift */; };
-		C5D899371FDB0FE8006F5716 /* TripSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D899311FDB0FE8006F5716 /* TripSearchViewController.swift */; };
-		C5D8993F1FDB118B006F5716 /* ContactsSearchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D8993D1FDB118B006F5716 /* ContactsSearchOperation.swift */; };
 		C5DC55001FB4B1140076C7F1 /* raleway-bold-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FC1FB4B1140076C7F1 /* raleway-bold-webfont.ttf */; };
 		C5DC55011FB4B1140076C7F1 /* raleway-medium-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FD1FB4B1140076C7F1 /* raleway-medium-webfont.ttf */; };
 		C5DC55021FB4B1140076C7F1 /* raleway-regular-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FE1FB4B1140076C7F1 /* raleway-regular-webfont.ttf */; };
 		C5DC55031FB4B1140076C7F1 /* raleway-semibold-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5DC54FF1FB4B1140076C7F1 /* raleway-semibold-webfont.ttf */; };
+		C5E7E4441FF4169B000EAAFB /* InstructionsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7E4431FF4169A000EAAFB /* InstructionsPageController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,19 +91,22 @@
 		C56420651FAB7D0B00CCAC91 /* DestinationAnnotations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationAnnotations.swift; sourceTree = "<group>"; };
 		C56420671FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteHighlightPolyline.swift; sourceTree = "<group>"; };
 		C573B65F1FB0BA160020ECE9 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C58D0D35202239F60057CA98 /* ListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListTableViewController.swift; sourceTree = "<group>"; };
+		C58D0D37202239F60057CA98 /* ContactsSearchOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsSearchOperation.swift; sourceTree = "<group>"; };
+		C58D0D38202239F60057CA98 /* SearchAheadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchAheadOperation.swift; sourceTree = "<group>"; };
+		C58D0D39202239F60057CA98 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		C58D0D3A202239F60057CA98 /* SearchDestinationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchDestinationViewController.swift; sourceTree = "<group>"; };
+		C58D0D3B202239F60057CA98 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
+		C58D0D3C202239F60057CA98 /* TripDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripDetailViewController.swift; sourceTree = "<group>"; };
+		C58D0D3D202239F60057CA98 /* TripPlanningContainerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripPlanningContainerController.swift; sourceTree = "<group>"; };
+		C58D0D3E202239F60057CA98 /* TripSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripSearchViewController.swift; sourceTree = "<group>"; };
 		C5AE91EE1FABA20F00477390 /* RouteOverlayFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteOverlayFactory.swift; sourceTree = "<group>"; };
 		C5D8991D1FD9DEE7006F5716 /* InfoPlist.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = InfoPlist.strings; sourceTree = "<group>"; };
-		C5D8992C1FDB0FE8006F5716 /* SearchAheadOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchAheadOperation.swift; sourceTree = "<group>"; };
-		C5D8992D1FDB0FE8006F5716 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
-		C5D8992E1FDB0FE8006F5716 /* SearchDestinationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchDestinationViewController.swift; path = "Trip Editor/SearchDestinationViewController.swift"; sourceTree = "<group>"; };
-		C5D8992F1FDB0FE8006F5716 /* TripPlanningContainerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripPlanningContainerController.swift; path = "Trip Editor/TripPlanningContainerController.swift"; sourceTree = "<group>"; };
-		C5D899301FDB0FE8006F5716 /* TripDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripDetailViewController.swift; path = "Trip Editor/TripDetailViewController.swift"; sourceTree = "<group>"; };
-		C5D899311FDB0FE8006F5716 /* TripSearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripSearchViewController.swift; path = "Trip Editor/TripSearchViewController.swift"; sourceTree = "<group>"; };
-		C5D8993D1FDB118B006F5716 /* ContactsSearchOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsSearchOperation.swift; sourceTree = "<group>"; };
 		C5DC54FC1FB4B1140076C7F1 /* raleway-bold-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-bold-webfont.ttf"; sourceTree = "<group>"; };
 		C5DC54FD1FB4B1140076C7F1 /* raleway-medium-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-medium-webfont.ttf"; sourceTree = "<group>"; };
 		C5DC54FE1FB4B1140076C7F1 /* raleway-regular-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-regular-webfont.ttf"; sourceTree = "<group>"; };
 		C5DC54FF1FB4B1140076C7F1 /* raleway-semibold-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-semibold-webfont.ttf"; sourceTree = "<group>"; };
+		C5E7E4431FF4169A000EAAFB /* InstructionsPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsPageController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,17 +173,14 @@
 		C56420121FAA64C600CCAC91 /* Nav Screen */ = {
 			isa = PBXGroup;
 			children = (
-				C5D8992E1FDB0FE8006F5716 /* SearchDestinationViewController.swift */,
-				C5D899301FDB0FE8006F5716 /* TripDetailViewController.swift */,
-				C5D8992F1FDB0FE8006F5716 /* TripPlanningContainerController.swift */,
-				C5D899311FDB0FE8006F5716 /* TripSearchViewController.swift */,
-				C5D8992B1FDB0FE8006F5716 /* SearchController */,
+				C58D0D34202239F60057CA98 /* Trip Editor */,
 				C56420641FAB6C3700CCAC91 /* Model */,
 				C56420131FAA653C00CCAC91 /* RootViewController.swift */,
 				C56420591FAA7F4B00CCAC91 /* NavViewController.swift */,
 				C564205B1FAA7F5900CCAC91 /* LaneMarkingViewController.swift */,
 				C56420621FAB699E00CCAC91 /* InstructionsViewController.swift */,
 				4BAD57F31FB1137F003ECF99 /* InstructionsTableViewCell.swift */,
+				C5E7E4431FF4169A000EAAFB /* InstructionsPageController.swift */,
 			);
 			path = "Nav Screen";
 			sourceTree = "<group>";
@@ -220,15 +222,28 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		C5D8992B1FDB0FE8006F5716 /* SearchController */ = {
+		C58D0D34202239F60057CA98 /* Trip Editor */ = {
 			isa = PBXGroup;
 			children = (
-				C5D8993D1FDB118B006F5716 /* ContactsSearchOperation.swift */,
-				C5D8992C1FDB0FE8006F5716 /* SearchAheadOperation.swift */,
-				C5D8992D1FDB0FE8006F5716 /* SearchController.swift */,
+				C58D0D35202239F60057CA98 /* ListTableViewController.swift */,
+				C58D0D36202239F60057CA98 /* SearchController */,
+				C58D0D3A202239F60057CA98 /* SearchDestinationViewController.swift */,
+				C58D0D3B202239F60057CA98 /* SwitchTableViewCell.swift */,
+				C58D0D3C202239F60057CA98 /* TripDetailViewController.swift */,
+				C58D0D3D202239F60057CA98 /* TripPlanningContainerController.swift */,
+				C58D0D3E202239F60057CA98 /* TripSearchViewController.swift */,
 			);
-			name = SearchController;
-			path = "Trip Editor/SearchController";
+			path = "Trip Editor";
+			sourceTree = "<group>";
+		};
+		C58D0D36202239F60057CA98 /* SearchController */ = {
+			isa = PBXGroup;
+			children = (
+				C58D0D37202239F60057CA98 /* ContactsSearchOperation.swift */,
+				C58D0D38202239F60057CA98 /* SearchAheadOperation.swift */,
+				C58D0D39202239F60057CA98 /* SearchController.swift */,
+			);
+			path = SearchController;
 			sourceTree = "<group>";
 		};
 		C5DC54FB1FB4B1140076C7F1 /* Fonts */ = {
@@ -244,6 +259,8 @@
 		};
 		F7A8B2E3A162519456FDCE99 /* Frameworks */ = {
 			isa = PBXGroup;
+			children = (
+			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
@@ -274,7 +291,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0910;
-				LastUpgradeCheck = 0910;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = Mapquest;
 				TargetAttributes = {
 					C5641FC31FAA511A00CCAC91 = {
@@ -306,7 +323,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C56420081FAA5CE600CCAC91 /* Info.plist in Resources */,
 				C5D8991E1FD9DEE7006F5716 /* InfoPlist.strings in Resources */,
 				C5DC55031FB4B1140076C7F1 /* raleway-semibold-webfont.ttf in Resources */,
 				C5DC55001FB4B1140076C7F1 /* raleway-bold-webfont.ttf in Resources */,
@@ -328,20 +344,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5D899361FDB0FE8006F5716 /* TripDetailViewController.swift in Sources */,
 				C564201D1FAA764D00CCAC91 /* AudioManager.m in Sources */,
+				C58D0D46202239F60057CA98 /* TripPlanningContainerController.swift in Sources */,
+				C5E7E4441FF4169B000EAAFB /* InstructionsPageController.swift in Sources */,
 				C56420631FAB699E00CCAC91 /* InstructionsViewController.swift in Sources */,
 				C56420681FAB7FFE00CCAC91 /* RouteHighlightPolyline.swift in Sources */,
-				C5D899351FDB0FE8006F5716 /* TripPlanningContainerController.swift in Sources */,
 				C56420611FAB55F800CCAC91 /* LoggingManager.swift in Sources */,
 				C56420141FAA653C00CCAC91 /* RootViewController.swift in Sources */,
 				C56420551FAA786100CCAC91 /* MKWeakTimerTarget.m in Sources */,
-				C5D899331FDB0FE8006F5716 /* SearchController.swift in Sources */,
 				C56420181FAA694500CCAC91 /* Destinations.swift in Sources */,
 				C56420521FAA780A00CCAC91 /* NSObject+DelayedBlock.m in Sources */,
 				C564205F1FAA822B00CCAC91 /* LoggingProtocol.swift in Sources */,
-				C5D899341FDB0FE8006F5716 /* SearchDestinationViewController.swift in Sources */,
+				C58D0D42202239F60057CA98 /* SearchController.swift in Sources */,
+				C58D0D3F202239F60057CA98 /* ListTableViewController.swift in Sources */,
+				C58D0D40202239F60057CA98 /* ContactsSearchOperation.swift in Sources */,
 				C56420161FAA667600CCAC91 /* MQManeuver+ManeuverImage.swift in Sources */,
+				C58D0D45202239F60057CA98 /* TripDetailViewController.swift in Sources */,
 				C56420071FAA5CE600CCAC91 /* Common.swift in Sources */,
 				C564205A1FAA7F4B00CCAC91 /* NavViewController.swift in Sources */,
 				C5AE91EF1FABA20F00477390 /* RouteOverlayFactory.swift in Sources */,
@@ -349,16 +367,17 @@
 				C56420581FAA7AE000CCAC91 /* KerningLabel.swift in Sources */,
 				C56420661FAB7D0B00CCAC91 /* DestinationAnnotations.swift in Sources */,
 				C564204F1FAA77F500CCAC91 /* NSTimer+Block.m in Sources */,
+				C58D0D47202239F60057CA98 /* TripSearchViewController.swift in Sources */,
 				C564205C1FAA7F5900CCAC91 /* LaneMarkingViewController.swift in Sources */,
+				C58D0D44202239F60057CA98 /* SwitchTableViewCell.swift in Sources */,
 				4BAD57F41FB1137F003ECF99 /* InstructionsTableViewCell.swift in Sources */,
 				C56420031FAA5CE600CCAC91 /* AppDelegate.swift in Sources */,
-				C5D899321FDB0FE8006F5716 /* SearchAheadOperation.swift in Sources */,
+				C58D0D43202239F60057CA98 /* SearchDestinationViewController.swift in Sources */,
 				C564201A1FAA72B800CCAC91 /* UIView-IBAddProperties.swift in Sources */,
 				C56420111FAA617200CCAC91 /* Constants.swift in Sources */,
 				C52977791FACD30D00818336 /* DestinationUpdaterProtocol.swift in Sources */,
 				C54F11181FC387D2007328C5 /* RouteNameAnnotation.swift in Sources */,
-				C5D8993F1FDB118B006F5716 /* ContactsSearchOperation.swift in Sources */,
-				C5D899371FDB0FE8006F5716 /* TripSearchViewController.swift in Sources */,
+				C58D0D41202239F60057CA98 /* SearchAheadOperation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

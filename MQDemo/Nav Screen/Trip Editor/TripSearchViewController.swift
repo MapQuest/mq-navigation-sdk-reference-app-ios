@@ -94,8 +94,8 @@ extension TripSearchViewController: UITableViewDelegate {
         let destination = displayableDestinations[indexPath.row]
         delegate?.selectedNew(destination: destination)
         MQDemoOptions.shared.addMRU(destination: destination)
-        
         searchBar.text = ""
+        searchBar.resignFirstResponder()
         active = false
     }
 }

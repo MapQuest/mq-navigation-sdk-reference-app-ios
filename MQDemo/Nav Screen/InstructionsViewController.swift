@@ -8,33 +8,20 @@
 import UIKit
 import MQNavigation
 
-protocol InstructionsViewControllerDelegate : NSObjectProtocol {
-    func dismissInstructionsView()
-}
-
 //MARK: -
 class InstructionsViewController: UIViewController {
 
     //MARK: Public Properties
-    var currentRouteLeg : MQRouteLeg?
-    var route: MQRoute?
-    weak var delegate : InstructionsViewControllerDelegate?
+    var currentRouteLeg : MQRouteLeg!
+    var route: MQRoute!
     var flagString: String?
-    var displayAddress : String? {
-        didSet {
-            guard let addressLabel = addressLabel else { return }
-            addressLabel.text = displayAddress
-        }
-    }
+    var displayAddress : String!
     
     //MARK: Interface Builder Outlets
     @IBOutlet weak var tableView : UITableView!
-    @IBOutlet weak var addressLabel : UILabel!
     @IBOutlet weak var dismissView : UIVisualEffectView!
-    @IBOutlet weak var topBarView : UIVisualEffectView!
-    @IBOutlet weak var flagTopSpace : NSLayoutConstraint!
     @IBOutlet weak var flag : UILabel!
-
+    
     //MARK: Private Properties
     private let destinationCellIdentifier = "InstructionsTableViewCell"
     
@@ -42,35 +29,23 @@ class InstructionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.indicatorStyle = .black
-        
-        let topInset: CGFloat = topBarView.frame.height //- tableView.frame.minY
-        let bottomInset = dismissView.frame.height
-        tableView.scrollIndicatorInsets = UIEdgeInsetsMake(topInset, 0, bottomInset, -2)
-        tableView.contentInset = UIEdgeInsetsMake(topInset, 0, bottomInset, 0)
-        
         if let flagString = flagString {
             flag.isHidden = false
             flag.text = flagString
-            flagTopSpace.constant = 0
-            let flagHeight = flag.frame.height
-            tableView.scrollIndicatorInsets = UIEdgeInsetsMake(topInset + flagHeight, 0, bottomInset, -2)
-            tableView.contentInset = UIEdgeInsetsMake(topInset + flagHeight, 0, bottomInset, 0)
         } else {
             flag.isHidden = true
-            flagTopSpace.constant = -self.flag.frame.height
         }
         
-        addressLabel.text = displayAddress
+        var inset = tableView.contentInset
+        inset.bottom = dismissView.frame.height
+        tableView.contentInset = inset
+        tableView.scrollIndicatorInsets = inset
     }
     
     @IBAction func dismissViewController(_ sender: UIButton) {
-        if let delegate = delegate {
-            delegate.dismissInstructionsView()
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
+        dismiss(animated: true, completion: nil)
     }
+
 }
 
 //MARK: - UITableViewDataSource

@@ -20,6 +20,7 @@ class RootViewController: UIViewController {
     @IBOutlet weak var navHatDistanceLabel: UILabel!
     @IBOutlet weak var navHatManeuverLabel: UILabel!
     @IBOutlet weak var navHatManeuverIcon: UIImageView!
+    @IBOutlet weak var navHatManeuverTypeTextLabel: UILabel!
     @IBOutlet weak var navHatDebugCounter: UILabel!
     @IBOutlet weak var turnLaneView: UIView! {
         didSet {
@@ -82,8 +83,7 @@ class RootViewController: UIViewController {
     fileprivate var defaultETAColor: UIColor!
     fileprivate var navWarnings = [String]()
     fileprivate var currentDestination : Destination? {
-        guard destinations.count > 0, let routeLeg = navViewController.currentRouteLeg, let indexOfRouteLeg = navViewController.selectedRoute?.legs.index(of: routeLeg) else { return nil}
-        return destinations[indexOfRouteLeg]
+        return navViewController.currentDestination
     }
     
     // MARK: - View Controller Methods
@@ -126,40 +126,55 @@ class RootViewController: UIViewController {
             navViewController.delegate = self
         } else if let destination = segue.destination as? LaneMarkingViewController {
             laneMarkingViewController = destination
-        } else if let instructionsVC = segue.destination as? InstructionsViewController {
+        } else if let instructionsPageController = (segue.destination as? UINavigationController)?.topViewController as? InstructionsPageController {
             // Setup the destination on the Instructions screen
             
-            guard let route = navViewController.selectedRoute, let routeLeg = navViewController.currentRouteLeg, let destination = currentDestination else {
+            guard let route = navViewController.selectedRoute, let routeLeg = navViewController.currentRouteLeg else {
                 return
             }
             
-            instructionsVC.currentRouteLeg = routeLeg
-            instructionsVC.route = route
-            
-            let highways: String = {
-                switch navViewController.tripOptions.highways {
-                case .avoid:    return "AVOID HIGHWAYS"
-                case .disallow: return "DISALLOW HIGHWAYS"
-                default:        return ""
+            func makeInstructionsVC(showingLeg leg: MQRouteLeg) -> InstructionsViewController {
+                func destinationForLeg() -> Destination? {
+                    guard destinations.count > 0, let indexOfRouteLeg = route.legs.index(of: leg) else { return nil}
+                    return destinations[indexOfRouteLeg]
                 }
-            }()
-            let tolls: String = {
-                switch navViewController.tripOptions.tolls {
-                case .avoid:    return "AVOID TOLLS"
-                case .disallow: return "DISALLOW TOLLS"
-                default:        return ""
+
+                guard let destination = destinationForLeg(), let instructionsVC = storyboard?.instantiateViewController(withIdentifier: "InstructionsViewController") as? InstructionsViewController else { fatalError("Storyboard is missing the Instructions") }
+                
+                instructionsVC.currentRouteLeg = leg
+                instructionsVC.route = route
+                
+                let highways: String = {
+                    switch navViewController.tripOptions.highways {
+                    case .avoid:    return "AVOID HIGHWAYS"
+                    case .disallow: return "DISALLOW HIGHWAYS"
+                    default:        return ""
+                    }
+                }()
+                let tolls: String = {
+                    switch navViewController.tripOptions.tolls {
+                    case .avoid:    return "AVOID TOLLS"
+                    case .disallow: return "DISALLOW TOLLS"
+                    default:        return ""
+                    }
+                }()
+                
+                if highways.isEmpty == false, tolls.isEmpty == false {
+                    instructionsVC.flagString = "\(highways) \(tolls)"
+                } else if highways.isEmpty == false {
+                    instructionsVC.flagString = highways
+                } else if tolls.isEmpty == false {
+                    instructionsVC.flagString = tolls
                 }
-            }()
-            
-            if highways.isEmpty == false, tolls.isEmpty == false {
-                instructionsVC.flagString = "\(highways) \(tolls)"
-            } else if highways.isEmpty == false {
-                instructionsVC.flagString = highways
-            } else if tolls.isEmpty == false {
-                instructionsVC.flagString = tolls
+                
+                instructionsVC.displayAddress = "\(destination.title ?? "")•\(destination.subtitle ?? "")"
+                return instructionsVC
             }
             
-            instructionsVC.displayAddress = "\(destination.title ?? "")•\(destination.subtitle ?? "")"
+            let viewControllers = route.legs.map { makeInstructionsVC(showingLeg: $0) }
+            
+            instructionsPageController.pages = viewControllers
+            instructionsPageController.selectedPageIndex = route.legs.index(of: routeLeg) ?? 0
         } else if let destination = segue.destination.childViewControllers.first as? TripPlanningContainerController {
             destination.delegate = self
         }
@@ -176,7 +191,7 @@ class RootViewController: UIViewController {
         
         // X is pressed
         let exitAction = UIAlertAction(title: "Exit Navigation", style: .destructive) { (action) in
-            self.navViewController.stopNav(with: .userEnded)
+            self.navViewController.stopNav()
         }
         let pauseAction = UIAlertAction(title: "Pause Navigation", style: .default) { (action) in
             self.navViewController.pauseNavigation()
@@ -203,6 +218,21 @@ class RootViewController: UIViewController {
         navViewController.resumeNavigation()
     }
     
+    @IBAction func nextDestinationLabelTapped(_ sender: AnyObject?) {
+        guard navViewController.isLegFinalDestination == false, let currentDestination = self.currentDestination, let nextDestinationIndex = destinations.index(of: currentDestination)?.advanced(by: 1) else { return }
+        
+        let nextDestinationName = destinations[nextDestinationIndex].displayTitle
+        let currentDestinationAction = UIAlertAction(title: currentDestination.displayTitle, style: .default, handler: nil)
+        let nextDestinationAction = UIAlertAction(title: nextDestinationName , style: .default) { (action) in
+            self.navViewController.advanceRouteToNextLeg()
+        }
+        let alert = UIAlertController(title: "Advance Leg", message: "Go to the next leg in the route?", preferredStyle: .actionSheet, actions: [currentDestinationAction, nextDestinationAction, UIAlertController.cancelActionNil])
+        alert.popoverPresentationController?.sourceRect = bottomBarStopButton.bounds
+        alert.popoverPresentationController?.sourceView = bottomBarStopButton
+
+        present(alert, animated: true, completion: nil)
+    }
+    
     @IBAction func GPSButtonPressed(_ sender: AnyObject?) {
         navViewController.centerMapOnUser()
     }
@@ -222,6 +252,7 @@ class RootViewController: UIViewController {
         navHatManeuverLabel.text = ""
         navHatDistanceLabel.text = ""
         navHatManeuverIcon.image = nil
+        navHatManeuverTypeTextLabel.text = "   "
         errorBarLabel.text = ""
         bottomBarMainLabel.text = ""
         bottomBarSecondaryLabel.text = ""
@@ -298,7 +329,6 @@ extension RootViewController: NavViewControllerDelegate {
     func pinDroppedOnMap(atLocation location: CLLocationCoordinate2D) {
         guard let drawer = self.parent as? PulleyViewController else { return }
         
-        navViewController.destinations.removeAll()
         navViewController.destinations.append(Destination(title: "Dropped Pin", subtitle: "", coordinate: location, reached: false))
         
         navViewController.refreshDestinations()
@@ -310,6 +340,7 @@ extension RootViewController: NavViewControllerDelegate {
     func navigationStarting() {
         navHatManeuverLabel.text = "Go to the route…"
         navHatManeuverIcon.image = #imageLiteral(resourceName: "navatar_location")
+        navHatManeuverTypeTextLabel.text = "   "
         navHatViewTopConstraint.constant = 0.0
         bottomBarBottomConstraint.constant = 0
         UIView.animate(withDuration: 0.3) {
@@ -348,9 +379,10 @@ extension RootViewController: NavViewControllerDelegate {
     }
     
     /// Navigation View Controller Delegate call to update the next upcoming manuver text and image
-    func update(maneuverBarText: String, turnType: MQManeuverType) {
+    func update(maneuverBarText: String, turnType: MQManeuverType, maneuverTypeText: String) {
         navHatManeuverLabel.text = maneuverBarText
         navHatManeuverIcon.image = MQManeuver.image(maneuverType: turnType)
+        navHatManeuverTypeTextLabel.text = maneuverTypeText
     }
     
     /// Navigation View Controller Delegate call to display Lane Guidance for an upcoming turn
@@ -411,15 +443,17 @@ extension RootViewController: NavViewControllerDelegate {
         
         bottomBarSecondaryLabel.text = arrivalText
 
-        // Final Route
-        guard navViewController.isLegFinalDestination == false, let finalDestinationName = destinations.last?.displayTitle else {
+        // Next Leg
+        assert(currentDestination != nil, "currentDestination is nil")
+        guard navViewController.isLegFinalDestination == false, let currentDestination = currentDestination, let nextDestinationIndex = destinations.index(of: currentDestination)?.advanced(by: 1) else {
+            bottomBarFinalLabel.text = ""
             return
         }
-        
-        let finalTime = Date(timeIntervalSinceNow: finalETA)
-        let finalTimeString = shortDateFormatter.string(from: finalTime).lowercased()
+        let nextDestinationName = destinations[nextDestinationIndex].displayTitle
+        let nextTime = Date(timeIntervalSinceNow: finalETA)
+        let nextTimeString = shortDateFormatter.string(from: nextTime).lowercased()
 
-        bottomBarFinalLabel.text = "\(finalTimeString) • \(finalDestinationName)"
+        bottomBarFinalLabel.text = "\(nextTimeString) • \(nextDestinationName)"
     }
     
     /// Navigation View Controller Delegate call to display warnings
@@ -482,27 +516,45 @@ extension RootViewController: NavViewControllerDelegate {
     }
     
     /// Navigation Controller has notified us that we have reached one of the non-final destinations of a multi-stop route
-    /// We are going to pause the navigation and show a button to start navigation to the next destination
-    func reachedDestination(_ destination: Destination, nextDestination: Destination?) {
+    /// We will let the user either initiate the end of navigation or next destination
+    func reachedDestination(_ destination:Destination,  nextDestination: Destination?, confirmArrival: @escaping (Bool) -> Void) {
         guard navViewController.state == .navigating else { return }
         
-        navHatDistanceLabel.text = destination.displayTitle
-        navHatManeuverLabel.text = destination.displaySubtitle
-
-        // We have more destinations we are going to
+        var actions = [UIAlertAction]()
+        
         if let nextDestination = nextDestination {
-            navViewController.pauseNavigation()
+            let continueAction = UIAlertAction(title: "Reached Destination", style: .default, handler: { (action) in
+                confirmArrival(true)
+                self.navViewController.pauseNavigation()
+
+                self.navHatManeuverLabel.text = "Arrived: \(destination.displayTitle)"
+                self.bottomBarMainLabel.text = "➢ \(nextDestination.displayTitle)"
+                self.bottomBarSecondaryLabel.text = "Tap to start navigation"
+
+            })
+            actions.append(continueAction)
             
-            navHatManeuverLabel.text = "Arrived: \(destination.displayTitle)"
-            bottomBarMainLabel.text = "➢ \(nextDestination.displayTitle)"
-            bottomBarSecondaryLabel.text = "Tap to start navigation"
-            return
+            let endNavigationAction = UIAlertAction(title: "End Navigation", style: .destructive, handler: { (action) in
+                confirmArrival(true)
+            })
+            actions.append(endNavigationAction)
+        } else {
+            let endNavigationAction = UIAlertAction(title: "Reached Destination", style: .default, handler: { (action) in
+                confirmArrival(true)
+            })
+            actions.append(endNavigationAction)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [weak self] in
-            guard let strongSelf = self, strongSelf.navViewController.state == .navigating else { return }
-            strongSelf.navViewController.stopNav(with: .reachedDestination)
-        }
+        let missedDestination = UIAlertAction(title: "Missed Destination", style: .default, handler: { (action) in
+            confirmArrival(false)
+        })
+        actions.append(missedDestination)
+
+        let alert = UIAlertController(title: destination.displayTitle, message: destination.displaySubtitle, preferredStyle: .actionSheet, actions: actions)
+        
+        alert.popoverPresentationController?.sourceView = view
+        alert.popoverPresentationController?.sourceRect = CGRect(x: 0, y: view.bounds.height-1, width: view.bounds.width, height: 1)
+        present(alert, animated: true, completion: nil)
     }
     
     /// When we update our routes, we want to bring up the route selection buttons
@@ -527,6 +579,15 @@ extension RootViewController: TripPlanningProtocol {
             navViewController.tripOptions = tripOptions
         }
     }
+    var shouldReroute:Bool {
+        get {
+            return navViewController.shouldReroute
+        }
+        
+        set {
+            navViewController.shouldReroute = newValue
+        }
+    }
     
     var destinations: [Destination] {
         return navViewController.destinations
@@ -538,10 +599,6 @@ extension RootViewController: TripPlanningProtocol {
     
     func showAttribution() {
         navViewController.showAttribution()
-    }
-    
-    func consentChanged() {
-        navViewController.userConsentedTracking = MQDemoOptions.shared.userConsentedTracking
     }
     
     func startNavigation(withRoute route: MQRoute) {
@@ -560,4 +617,8 @@ extension RootViewController: TripPlanningProtocol {
     }
     
 }
+
+
+
+
 

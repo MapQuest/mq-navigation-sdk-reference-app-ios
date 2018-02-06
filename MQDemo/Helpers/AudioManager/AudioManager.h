@@ -41,8 +41,8 @@ typedef NS_ENUM(NSInteger, AudioVolumeLevel) {
 @interface AudioManager : NSObject
 
 -(void) playAudio:(NSData*)audioData completion:(PlayAudioCompletion)block;
--(void) playText:(NSString*)text completion:(PlayAudioCompletion)block;
--(void) playAudio:(NSData*)audioData text:(NSString*)text completion:(PlayAudioCompletion)block;
+-(void) playText:(NSString*)text language:(nullable NSString*)languageCode completion:(PlayAudioCompletion)block;
+-(void) playAudio:(NSData*)audioData text:(NSString*)text language:(nullable NSString*)languageCode completion:(PlayAudioCompletion)block;
 -(void) stopPlayback;
 
 -(void) requestRecordPermission:(void (^ _Nullable)(BOOL) )completion;

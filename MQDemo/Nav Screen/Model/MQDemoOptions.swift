@@ -49,27 +49,14 @@ class MQDemoOptions {
     struct Constants {
         static let promptsAudio = "PromptsAudio"
         static let showSwipeMe = "showSwipeMe"
-        static let showedTrackingTOS = "showedTrackingTOS"
-        static let userConsentedTracking = "userConsentedTracking"
         static let mruDestinations = "mruDestinations"
+        static let shouldReroute = "shouldReroute"
     }
     
     private let defaults = UserDefaults.standard
     
     /// Public Methods
     static let shared = MQDemoOptions()
-    var userConsentedTracking: Bool = false {
-        didSet {
-            defaults.set(userConsentedTracking, forKey: Constants.userConsentedTracking)
-        }
-    }
-    
-    var showedTrackingTOS: Bool = false {
-        didSet {
-            defaults.set(showedTrackingTOS, forKey: Constants.showedTrackingTOS)
-        }
-    }
-    
     var showSwipeMe: Bool = false {
         didSet {
             defaults.set(showSwipeMe, forKey: Constants.showSwipeMe)
@@ -78,6 +65,11 @@ class MQDemoOptions {
     var promptsAudio: PromptsAudio = .always {
         didSet {
             defaults.set(promptsAudio.rawValue, forKey: Constants.promptsAudio)
+        }
+    }
+    var shouldReroute: Bool {
+        didSet {
+            defaults.set(shouldReroute, forKey: Constants.shouldReroute)
         }
     }
     
@@ -113,6 +105,7 @@ class MQDemoOptions {
     
     // MARK: Read in the options
     init() {
+        UserDefaults.standard.register(defaults: [Constants.shouldReroute : true])
         
         func readPlace(type: SearchResultType) -> Destination? {
             guard let data = defaults.data(forKey: type.rawValue), let destination = NSKeyedUnarchiver.unarchiveObject(with: data) as? Destination else { return nil }
@@ -128,8 +121,7 @@ class MQDemoOptions {
         
         promptsAudio = PromptsAudio(rawValue: defaults.integer(forKey: Constants.promptsAudio)) ?? .always
         showSwipeMe = defaults.bool(forKey: Constants.showSwipeMe)
-        userConsentedTracking = defaults.bool(forKey: Constants.userConsentedTracking)
-        showedTrackingTOS = defaults.bool(forKey: Constants.showedTrackingTOS)
+        shouldReroute = defaults.bool(forKey: Constants.shouldReroute)
         
         workPlace = readPlace(type: .work)
         parkingPlace = readPlace(type: .parking)
