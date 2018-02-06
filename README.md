@@ -14,8 +14,7 @@ changes, run the following (and commit the resulting changes):
 
     $ [sudo] sudo gem install cocoapods
 
-Review `Podfile` to ensure that the `MQNavigation` pod points to the
-appropriate folder containing the Navigation SDK. For example:
+Download the `MQNavigation-3.2.0.zip` file from the link provided to you and then review `Podfile` to ensure that the `MQNavigation` pod points to the appropriate folder containing the Navigation SDK. For example:
 
     pod 'MQNavigation', :path => '/path/to/navigation-ios'
 
