@@ -60,7 +60,9 @@ class RootViewController: UIViewController {
     }
     
     @IBOutlet weak var floatingButtons: UIView!
-
+    @IBOutlet weak var infoButton: UIButton!
+    @IBOutlet weak var floatingButtonsTopConstraint: NSLayoutConstraint!
+    
     // MARK: Navigation Controller
     var navViewController: NavViewController!
     
@@ -325,14 +327,25 @@ class RootViewController: UIViewController {
 // MARK: - NavViewControllerDelegate
 extension RootViewController: NavViewControllerDelegate {
     
+    /// Edge Insets for the navigation view to be able to zoom annotations properly
+    var visibleEdgeInsets : UIEdgeInsets {
+        guard let drawer = self.parent as? PulleyViewController, let searchController = drawer.drawerContentViewController as? SearchDestinationViewController else {
+            return UIEdgeInsetsMake(navHatView.frame.maxY, 20, bottomBarView.frame.origin.x, 20)
+        }
+        return UIEdgeInsetsMake(navHatView.frame.maxY + statusBarBlurView.bounds.height, 20, searchController.partialRevealDrawerHeight(bottomSafeArea: drawer.bottomSafeSpace), 20)
+    }
+    
     /// If the user drops a pin, we need to bring the Start Navigation UI up
     func pinDroppedOnMap(atLocation location: CLLocationCoordinate2D) {
         guard let drawer = self.parent as? PulleyViewController else { return }
         
-        navViewController.destinations.append(Destination(title: "Dropped Pin", subtitle: "", coordinate: location, reached: false))
+        navViewController.destinations.append(Destination(title: "Dropped Pin", subtitle: "", routeableLocation: location, reached: false))
         
         navViewController.refreshDestinations()
-        drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
+        
+        if drawer.drawerPosition != .partiallyRevealed {
+            drawer.setDrawerPosition(position: .partiallyRevealed, animated: true)
+        }
     }
     
     /// Navigation View Controller Delegate call that navigation is starting
@@ -517,7 +530,7 @@ extension RootViewController: NavViewControllerDelegate {
     
     /// Navigation Controller has notified us that we have reached one of the non-final destinations of a multi-stop route
     /// We will let the user either initiate the end of navigation or next destination
-    func reachedDestination(_ destination:Destination,  nextDestination: Destination?, confirmArrival: @escaping (Bool) -> Void) {
+    func reachedDestination(_ destination:Destination,  nextDestination: Destination?, confirmArrival: @escaping MQConfirmArrivalBlock) {
         guard navViewController.state == .navigating else { return }
         
         var actions = [UIAlertAction]()
@@ -566,7 +579,7 @@ extension RootViewController: NavViewControllerDelegate {
     }
 }
 
-// MARK: - DestinationUpdating
+// MARK: - TripPlanningProtocol
 
 /// This extension allows the root view controller to update the NavViewController from the Search Dock
 extension RootViewController: TripPlanningProtocol {
@@ -599,6 +612,10 @@ extension RootViewController: TripPlanningProtocol {
     
     func showAttribution() {
         navViewController.showAttribution()
+    }
+    
+    func consentChanged() {
+        navViewController.userLocationTrackingConsentStatus = MQDemoOptions.shared.userLocationTrackingConsentStatus
     }
     
     func startNavigation(withRoute route: MQRoute) {

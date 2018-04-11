@@ -5,6 +5,6 @@
   Copyright © 2017 Mapquest. All rights reserved.
 */
 
-informationSharingPrompt = "MapQuest uses location data to provide its services and may collect location information even when the app is not in use.\n\nThis information will be used, to enhance location-based services and experiences supported by Verizon (including MapQuest and Oath).";
+informationSharingPrompt = "Get consent here after clearly indicating that this app will collect precise location data when app is actively navigating and will be shared with third parties for their independent use.";
 
-informationSharingDescription = "MapQuest may collect location information even when the app is not in use.\n\nThis information will be used, with your permission, to enhance location-based services and experiences supported by Verizon (including MapQuest and Oath).";
+informationSharingDescription = "Get consent here after clearly indicating that this app will collect precise location data when app is actively navigating and will be shared with third parties for their independent use.";

@@ -36,6 +36,9 @@ protocol TripPlanningProtocol : DestinationManagementProtocol {
     /// Show the attributions
     func showAttribution()
     
+    /// Update the Consent
+    func consentChanged()
+
     var tripOptions:MQRouteOptions { get }
     
     var shouldReroute:Bool {set get}
@@ -44,4 +47,5 @@ protocol TripPlanningProtocol : DestinationManagementProtocol {
 //optional protocols (Swift does not support optional protocols, so an empty method implementation essentially makes one
 extension TripPlanningProtocol {
     func showAttribution() { }
+    func consentChanged() { }
 }

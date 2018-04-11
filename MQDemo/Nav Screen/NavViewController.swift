@@ -27,7 +27,7 @@ protocol NavViewControllerDelegate {
     func navigationStopped()
     
     /// Notification for reaching a destination
-    func reachedDestination(_ destination:Destination,  nextDestination: Destination?, confirmArrival: @escaping (Bool) -> Void)
+    func reachedDestination(_ destination:Destination,  nextDestination: Destination?, confirmArrival: @escaping MQConfirmArrivalBlock)
     
     /// Provide the upcoming maneuver distance
     func update(maneuverBarDistance: CLLocationDistance)
@@ -55,6 +55,9 @@ protocol NavViewControllerDelegate {
     
     /// A pin was dropped on the map
     func pinDroppedOnMap(atLocation location: CLLocationCoordinate2D)
+    
+    /// Visible area for zooming
+    var visibleEdgeInsets : UIEdgeInsets { get }
 }
 
 //MARK: -
@@ -122,6 +125,18 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
         return navigator.navigationManagerState;
     }
     
+    /// Set Navigation Sharing Consent
+    var userLocationTrackingConsentStatus : MQUserLocationTrackingConsentStatus {
+        set {
+            MQDemoOptions.shared.userLocationTrackingConsentStatus = newValue
+            self.navigator.userLocationTrackingConsentStatus = newValue
+        }
+    
+        get {
+            return MQDemoOptions.shared.userLocationTrackingConsentStatus
+        }
+    }
+    
     //MARK: Interface Builder Outlets
     @IBOutlet weak var mapView: MQMapView! {
         didSet {
@@ -144,10 +159,9 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     private var hasInitialLocation = false
     
     /// MQNavigationManager is the framework to talk to the Mapquest Navigation
-    private lazy var navigator: MQNavigationManager = {
-        let navigator = MQNavigationManager()
-        navigator.delegate = self
-        navigator.promptDelegate = self
+    private lazy var navigator: MQNavigationManager! = {
+        let navigator = MQNavigationManager(delegate: self, promptDelegate: self)
+        navigator?.userLocationTrackingConsentStatus = self.userLocationTrackingConsentStatus
         
         LoggingManager.shared.navigationManager = navigator
         return navigator
@@ -204,7 +218,7 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     
     /// Start navigation with the selected route
     func startNav(trafficReroute: Bool) {
-        guard let route = selectedRoute, let currentLocation = currentLocation, route.destinationLocations.count > 0 else { return }
+        guard let route = selectedRoute, let currentLocation = currentLocation, route.destinations.count > 0 else { return }
         
         // If this is a traffic reroute, simply start a new navigation with this route
         if trafficReroute {
@@ -221,22 +235,11 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
         
         delegate?.navigationStarting()
         
-        func navigate() {
-            
-            if MQDemoOptions.shared.promptsAudio != .none {
-                audioManager.active = true
-            }
-            UIApplication.shared.isIdleTimerDisabled = true
-            navigator.startNavigation(with: route)
+        if MQDemoOptions.shared.promptsAudio != .none {
+            audioManager.active = true
         }
-        
-        if LoggingManager.shared.shouldLog {
-            LoggingManager.shared.start(route: route) { _ in
-                navigate()
-            }
-        } else {
-            navigate()
-        }
+        UIApplication.shared.isIdleTimerDisabled = true
+        navigator.startNavigation(with: route)
     }
     
     /// Stop navigation
@@ -256,8 +259,9 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     
     /// Advance to the next leg of a multi-leg route
     func advanceRouteToNextLeg() {
-        guard let reachedLeg = currentRouteLeg, navigator.advanceRouteToNextLeg() else { return }
-        updateDestination(reachedDestinationFor: reachedLeg, isFinalDestination: false, requestUserAcceptance: false, confirmArrival: {_ in })
+        guard let reachedDestination = currentDestination, let reachedLeg = currentRouteLeg, navigator.advanceRouteToNextLeg() else { return }
+
+        updateDestination(reachedDestination: reachedDestination, forCompletedRouteLeg: reachedLeg, isFinalDestination: false, requestUserAcceptance: false, confirmArrival: {_ in })
     }
     
     /// This method resumes following the user's location after a user pans or zooms the map
@@ -446,7 +450,7 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     /// Once we receive the routes we choose the first route as a default selected route and draw all of the routes
     /// We also annotate the destinations and ETA times
     /// - Parameter locations: An array of locations
-    private func requestRoutes(withLocations locations: [CLLocation]) {
+    private func requestRoutes(withDestinations routableDestinations: [MQRouteDestination]) {
         
         //TODO: Once we support a list of MQIDs instead of locations, I'll need to take in an array of MQIDs
         
@@ -457,7 +461,7 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
             return
         }
         
-        routeService.requestRoutes(withStart: currentLocation, destinationLocations: locations, options: tripOptions) { routes, error in
+        routeService.requestRoutes(withStart: currentLocation, destinations: routableDestinations, options: tripOptions) { routes, error in
             
             defer {
                 OperationQueue.main.addOperation {
@@ -487,9 +491,11 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
                 strongSelf.availableRoutes = routes
                 strongSelf.draw(routes: routes)
                 strongSelf.drawNames(routes: routes)
-                strongSelf.annotateDestinations(zoomMap: true)
-                
+
+                // We want to update the UI before we annotate the destinations and zoom
                 strongSelf.delegate?.update(routes: routes)
+
+                strongSelf.annotateDestinations(zoomMap: true)
             }
         }
     }
@@ -538,10 +544,11 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
         drawSelectedRoute()
         
         // Destinations might not match the route destinations due to the new route starting at the point the reroute occurred
-        if route.destinationLocations.count < destinations.count {
-            let pastDestinations = destinations.count - route.destinationLocations.count
-            destinations.removeFirst(pastDestinations)
+        guard let routeDestinations = route.destinations as? [Destination] else {
+            assertionFailure("Destinations are not what we expect")
+            return
         }
+        destinations = routeDestinations
     }
     
     /// Remove Route Name annotations
@@ -594,17 +601,15 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
         var annotations = destinationAnnotations as [MGLAnnotation]
         annotations.append(mapView.userLocation!)
         
-        if zoomMap {
-            mapView.showAnnotations(annotations, animated: true)
+        if zoomMap, let visibleEdgeInsets = delegate?.visibleEdgeInsets {
+            mapView.showAnnotations(annotations, edgePadding: visibleEdgeInsets, animated: true)
         }
     }
     
     /// Update our UI based on reaching the next destination
-    func updateDestination(reachedDestinationFor completedRouteLeg: MQRouteLeg, isFinalDestination: Bool, requestUserAcceptance: Bool, confirmArrival: @escaping (Bool) -> Void) {
-        guard let route = selectedRoute,
-            let indexOfLeg = route.legs.index(of: completedRouteLeg),
-            let legs = selectedRoute?.legs,
-            let indexOfNextRouteLeg = legs.index(of: completedRouteLeg)?.advanced(by: 1) else {
+    func updateDestination(reachedDestination: MQRouteDestination, forCompletedRouteLeg completedRouteLeg: MQRouteLeg, isFinalDestination: Bool, requestUserAcceptance: Bool, confirmArrival: @escaping MQConfirmArrivalBlock) {
+        guard let destination = reachedDestination as? Destination,
+            let indexOfNextDestination = destinations.index(of: destination)?.advanced(by: 1) else {
                 
                 let alert = UIAlertController(title: "Completed Route", message: "We don't have a selected Route or the route leg is wrong", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -613,15 +618,15 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
         }
 
         let nextDestination : Destination? = {
-            guard legs.count > indexOfNextRouteLeg else { return nil }
-            return destinations[indexOfNextRouteLeg]
+            guard destinations.count > indexOfNextDestination else { return nil }
+            return destinations[indexOfNextDestination]
         }()
         
         func updateNavigationView() {
             // if its accepted, then setup properties
             self.lastCompletedRouteLeg = completedRouteLeg
             
-            self.destinations[indexOfLeg].reached = true
+            destination.reached = true
             self.annotateDestinations(zoomMap: false)
             
             // Draw the next leg of the route
@@ -633,7 +638,7 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
             return
         }
         
-        delegate?.reachedDestination(destinations[indexOfLeg], nextDestination: nextDestination, confirmArrival: { (didArrive) in
+        delegate?.reachedDestination(destination, nextDestination: nextDestination, confirmArrival: { (didArrive) in
             
             // Call the Navigation Manager callback with the result
             confirmArrival(didArrive)
@@ -771,6 +776,26 @@ extension NavViewController: MQNavigationManagerDelegate {
     func navigationManagerDidStartNavigation(_ navigationManager: MQNavigationManager) {
         lastCompletedRouteLeg = nil
         setupNotifications()
+        if LoggingManager.shared.shouldLog, let route = self.navigator.route {
+            LoggingManager.shared.start(route: route, completion: nil)
+        }
+    }
+    
+    /// This is a delegate call from the Navigation Manager after attempting to start navigation, but encountering an error
+    func navigationManager(_ navigationManager: MQNavigationManager, failedToStartNavigationWithError error: Error) {
+        let errorCode = (error as NSError).code
+        var errorDescription = ""
+        
+        if errorCode == MQNavigationErrorCode.userLocationTrackingConsentNotSet.rawValue {
+            errorDescription = "Please set user consent to location tracking to navigate"
+        } else if errorCode == MQNavigationErrorCode.deniedLocationAuthorization.rawValue {
+            errorDescription = "Please allow location services to navigate"
+        }
+        
+        SVProgressHUD.showError(withStatus: errorDescription)
+        lastCompletedRouteLeg = nil
+        clearNavigationUI()
+        delegate?.navigationStopped()
     }
     
     /// This is a delegate call from the Navigation Manager that allows you to update the UI or perform certain actions
@@ -831,8 +856,9 @@ extension NavViewController: MQNavigationManagerDelegate {
     }
     
     /// The Navigation Manager determines that the user has reached the destination
-    func navigationManager(_ navigationManager: MQNavigationManager, reachedDestinationFor completedRouteLeg: MQRouteLeg, isFinalDestination: Bool, confirmArrival: @escaping (Bool) -> Void) {
-        updateDestination( reachedDestinationFor: completedRouteLeg, isFinalDestination: isFinalDestination, requestUserAcceptance: true, confirmArrival: confirmArrival)
+    func navigationManager(_ navigationManager: MQNavigationManager, reachedDestination routeDestination: MQRouteDestination, for completedRouteLeg: MQRouteLeg, isFinalDestination: Bool, confirmArrival: @escaping MQConfirmArrivalBlock) {
+        
+        updateDestination(reachedDestination: routeDestination, forCompletedRouteLeg: completedRouteLeg, isFinalDestination: isFinalDestination, requestUserAcceptance: true, confirmArrival: confirmArrival)
     }
     
     /// The Navigation Manager has updated the ETA with a new one
@@ -1016,17 +1042,17 @@ extension NavViewController: MQNavigationManagerPromptDelegate {
 // MARK: - Routing Processing
 extension NavViewController {
     
-    /// We're using the Mapquest Geocoder to identify routable locations for addresses we get from Contacts
+    /// We're using the Mapquest Geocoder to identify routable locations for addresses we get from Contacts or addresses without an MQID
     ///
     /// - Parameter completion: A completion block that we'll pass back the array of routable locations
-    private func requestRoutableLocations(completion: @escaping (([CLLocation]?)-> Void)) {
+    private func requestRoutableLocations(completion: @escaping (([MQRouteDestination]?)-> Void)) {
         
         guard var urlComponents = URLComponents(string: "https://www.mapquestapi.com/geocoding/v1/batch") else {
             completion(nil)
             return
         }
         
-        var routeableLocations = [CLLocation]()
+        var routeableLocations = destinations
         
         // Setup the URL
         let defaultSession = URLSession(configuration: .default)
@@ -1037,13 +1063,12 @@ extension NavViewController {
         queryItems.append(URLQueryItem(name: "thumbMaps", value: "false"))
         queryItems.append(URLQueryItem(name: "maxResults", value: "1"))
         
-        // Add the locations in case there are multiple address from Contacts
+        // Add the destinations in case there are multiple address from Contacts
+        // Ignore the destinations that don't need geocoding
         destinations.forEach { destination in
-            
-            if let value = destination.geoAddress.singleLineString(), value.isEmpty == false {
+            //We don't want to geocode destinations that already have an mqid or routeableLocation
+            if destination.mqid == nil, destination.routeableLocation == nil, let value = destination.geoAddress.singleLineString(), value.isEmpty == false {
                 queryItems.append(URLQueryItem(name: "location", value: value))
-            } else {
-                queryItems.append(URLQueryItem(name: "location", value: "\(destination.location.coordinate.latitude),\(destination.location.coordinate.longitude)"))
             }
         }
         urlComponents.queryItems = queryItems
@@ -1075,13 +1100,18 @@ extension NavViewController {
                 return
             }
             
+            // The assumption here is that since we are only geocoding for Destinations that we have no mqID or routableLocation, the first one in the list is the one we're going to set the new routableLocation in
+            func firstAvailableDestination() -> Destination? {
+                return routeableLocations.first { $0.routeableLocation == nil && $0.mqid == nil && $0.geoAddress.singleLineString().isEmpty == false }
+            }
+            
             // Once we're done with any aspect of this - send back the routable locations
             defer {
-                if self.destinations.count == routeableLocations.count {
+                if firstAvailableDestination() == nil {
                     completion(routeableLocations)
                 }
             }
-            
+           
             // Here we parse out the results and get the routable lat/long
             do {
                 guard let geocodedJSON = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any], let results = geocodedJSON["results"] as? [[String:Any]] else { return }
@@ -1092,7 +1122,11 @@ extension NavViewController {
                     for location in locations {
                         guard let latLng = location["latLng"] as? [String:Double], let routableLat = latLng["lat"], let routableLong = latLng["lng"] else { return }
                         let routableLocation = CLLocation(latitude: routableLat, longitude: routableLong)
-                        routeableLocations.append( routableLocation )
+                        guard let destination = firstAvailableDestination() else {
+                            assertionFailure("Our Destinations list doesn't match what we expect")
+                            return
+                        }
+                        destination.routeableLocation = routableLocation
                     }
                 }
             } catch let error {
@@ -1111,14 +1145,14 @@ extension NavViewController: DestinationManagementProtocol {
     
     func refreshDestinations() {
         SVProgressHUD.show(withStatus: "Fetching route…")
-        requestRoutableLocations { locations in
-            guard let locations = locations else {
+        requestRoutableLocations { routeableDestinations in
+            guard let routeableDestinations = routeableDestinations else {
                 OperationQueue.main.addOperation {
                     SVProgressHUD.showError(withStatus: "")
                 }
                 return
             }
-            self.requestRoutes(withLocations: locations)
+            self.requestRoutes(withDestinations: routeableDestinations)
         }
     }
     
@@ -1161,8 +1195,29 @@ extension NavViewController: CLLocationManagerDelegate {
             return
         }
         
+        /// When the user authorizes, we can bring up the TOS
+        func showTOS() {
+            guard MQDemoOptions.shared.showedTrackingTOS == false else { return }
+            
+            let allowAction = UIAlertAction(title: "I Agree", style: .default) { _ in
+                MQDemoOptions.shared.showedTrackingTOS = true
+                self.userLocationTrackingConsentStatus = .granted
+            }
+            let declineAction = UIAlertAction(title: "No Thanks", style: .default) { _ in
+                MQDemoOptions.shared.showedTrackingTOS = true
+                self.userLocationTrackingConsentStatus = .denied
+            }
+            
+            let tosAlert = UIAlertController(title: "Allow Additional Usage of Location Data?", message: Bundle.main.localizedString(forKey: "informationSharingPrompt", value: nil, table: "InfoPlist"), preferredStyle: .alert, actions: [allowAction, declineAction])
+            
+            present(tosAlert, animated: true, completion: nil)
+        }
+        
         // Go ahead and start getting the location so we can see where to center the map
         locationManager.startUpdatingLocation()
+        
+        // Show the TOS if applicable
+        showTOS()
         
         //Attempt to center if we have an old location
         centerMapOnUser()

@@ -51,6 +51,7 @@ class TripDetailViewController: UITableViewController {
         case avoidInternationalBorders
         case avoidSeasonalClosures
         case allowOffRouteReroutes
+        case allowInformationSharing
         case measurementUnits
         case navigationLanguage
     }
@@ -66,6 +67,7 @@ class TripDetailViewController: UITableViewController {
         ]
     
     private let systemOption: [Option] = [
+        .allowInformationSharing,
         .measurementUnits,
         .navigationLanguage,
         ]
@@ -149,7 +151,7 @@ class TripDetailViewController: UITableViewController {
         
         switch option {
         case .avoidTolls, .avoidHighways, .avoidFerries, .avoidUnpaved, .avoidInternationalBorders, .avoidSeasonalClosures: break
-        case .allowOffRouteReroutes: break
+        case .allowOffRouteReroutes, .allowInformationSharing: break
         case .measurementUnits:
             guard let vc = storyboard?.instantiateViewController(withIdentifier: "ListTableViewController") as? ListTableViewController else {
                 assertionFailure()
@@ -255,6 +257,11 @@ class TripDetailViewController: UITableViewController {
         case .allowOffRouteReroutes:
             return switchCell(text: "Allow Off-Route Reroutes", value: MQDemoOptions.shared.shouldReroute, for: indexPath, valueChangedBlock: { (selected: Bool) in
                 self.delegate?.shouldReroute = selected
+            })
+        case .allowInformationSharing:
+            return switchCell(text: "Allow Information Sharing", value: MQDemoOptions.shared.userLocationTrackingConsentStatus == .granted, for: indexPath, valueChangedBlock: { (selected: Bool) in
+                MQDemoOptions.shared.userLocationTrackingConsentStatus = selected ? .granted : .denied
+                self.delegate?.consentChanged()
             })
         case .measurementUnits:
             var title: String? = nil

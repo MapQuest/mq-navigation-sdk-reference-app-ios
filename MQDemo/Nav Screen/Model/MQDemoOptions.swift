@@ -49,6 +49,8 @@ class MQDemoOptions {
     struct Constants {
         static let promptsAudio = "PromptsAudio"
         static let showSwipeMe = "showSwipeMe"
+        static let showedTrackingTOS = "showedTrackingTOS"
+        static let userLocationTrackingConsentStatus = "userLocationTrackingConsentStatus"
         static let mruDestinations = "mruDestinations"
         static let shouldReroute = "shouldReroute"
     }
@@ -57,6 +59,18 @@ class MQDemoOptions {
     
     /// Public Methods
     static let shared = MQDemoOptions()
+    var userLocationTrackingConsentStatus: MQUserLocationTrackingConsentStatus = .awaiting {
+        didSet {
+            defaults.set(userLocationTrackingConsentStatus.rawValue, forKey: Constants.userLocationTrackingConsentStatus)
+        }
+    }
+    
+    var showedTrackingTOS: Bool = false {
+        didSet {
+            defaults.set(showedTrackingTOS, forKey: Constants.showedTrackingTOS)
+        }
+    }
+    
     var showSwipeMe: Bool = false {
         didSet {
             defaults.set(showSwipeMe, forKey: Constants.showSwipeMe)
@@ -121,6 +135,8 @@ class MQDemoOptions {
         
         promptsAudio = PromptsAudio(rawValue: defaults.integer(forKey: Constants.promptsAudio)) ?? .always
         showSwipeMe = defaults.bool(forKey: Constants.showSwipeMe)
+        userLocationTrackingConsentStatus = MQUserLocationTrackingConsentStatus(rawValue: defaults.integer(forKey: Constants.userLocationTrackingConsentStatus)) ?? .awaiting
+        showedTrackingTOS = defaults.bool(forKey: Constants.showedTrackingTOS)
         shouldReroute = defaults.bool(forKey: Constants.shouldReroute)
         
         workPlace = readPlace(type: .work)
