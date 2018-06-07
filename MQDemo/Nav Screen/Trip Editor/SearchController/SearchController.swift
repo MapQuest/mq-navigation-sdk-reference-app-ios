@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SearchParentProtocol : class {
-    weak var tableView: UITableView! { get }
+    var tableView: UITableView! { get }
     var displayableDestinations : [Destination] { get set }
     var shouldDisplayFavorites : Bool { get }
     func clearSearchResults()

@@ -87,7 +87,7 @@ protocol SessionLoggingProtocol {
     var hasActiveLoggingSession : Bool { get }
     var currentSessionId: String? { get }
     var userString: String? { get set }
-    weak var navigationManager: MQNavigationManager? { get set }
+    var navigationManager: MQNavigationManager? { get set }
 
     func start(route: MQRoute, completion: ((_ sessionID: String?)->Void)?)
     func end(reason: SessionEndReason, completion: ((_ promptPlayHistory: [PromptPlayEntry])->Void)?)
