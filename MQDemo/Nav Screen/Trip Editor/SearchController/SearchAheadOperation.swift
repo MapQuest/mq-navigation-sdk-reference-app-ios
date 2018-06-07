@@ -36,18 +36,21 @@ class SearchAheadOperation : SearchOperation {
         }
         
         //Search Query
-        SearchAheadOperation.searchAheadService.predictResults(forQuery: searchText, collections: SearchAheadOperation.collections, location: location.coordinate, limit: 10, success: { [weak self] searchAheadResponse in
+        let options = MQSearchAheadOptions()
+        options.limit = 10
+        
+        SearchAheadOperation.searchAheadService.predictResults(forQuery: searchText, collections: SearchAheadOperation.collections, location: location.coordinate, options: options, success: { [weak self] searchAheadResponse in
             
             guard let strongSelf = self, strongSelf.isCancelled == false else { return }
             
             defer {
-                if (searchAheadResponse?.feedback) != nil {
-                    strongSelf.feedback = searchAheadResponse?.feedback;
+                if (searchAheadResponse.feedback) != nil {
+                    strongSelf.feedback = searchAheadResponse.feedback;
                 }
                 strongSelf.semaphore.signal()
             }
             
-            guard let results = searchAheadResponse?.results else {
+            guard let results = searchAheadResponse.results else {
                 strongSelf.completion(nil)
                 return
             }
@@ -76,9 +79,8 @@ class SearchAheadOperation : SearchOperation {
                 
                 self?.completion(nil)
                 
-                guard let error = error else { return }
                 print(error);
-            }, includesFeedback:true);
+            });
         
         // Don't let the operation close without the asynchronous calls finishing
         _ = semaphore.wait(timeout: .now() + 10)
