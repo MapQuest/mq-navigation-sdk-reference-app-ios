@@ -56,7 +56,7 @@ class SearchAheadOperation : SearchOperation {
             }
             
             // map the search results into our own struct to make it easier to work with in Swift and format the results into the format we want
-            let newDestinations:[Destination]  = results.flatMap {
+            let newDestinations:[Destination]  = results.compactMap {
                 guard let place = $0.place, let displayString = $0.displayString else { return nil }
                 let destination = Destination(place: place)
                 

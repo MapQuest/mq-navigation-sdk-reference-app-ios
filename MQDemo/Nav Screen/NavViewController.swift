@@ -7,6 +7,7 @@
 
 import UIKit
 import Mapbox
+import MapQuestMaps
 import MQCore
 import MQNavigation
 import SVProgressHUD
@@ -60,6 +61,9 @@ protocol NavViewControllerDelegate {
     var visibleEdgeInsets : UIEdgeInsets { get }
 }
 
+class RouteSummaryAnnotation: MGLPointAnnotation {
+}
+
 //MARK: -
 class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     
@@ -91,7 +95,7 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     
     /// Trip options that you can expose to the user
     /// Used to affect the requestRoutes method and reroute requests
-    var tripOptions: MQRouteOptions = {
+    lazy var tripOptions: MQRouteOptions = {
         MQRouteOptions().build {
             $0.maxRoutes = 3
             $0.tolls = .avoid
@@ -99,8 +103,9 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
             $0.internationalBorders = .avoid
             $0.unpaved = .allow
             $0.seasonalClosures = .avoid
-            $0.systemOfMeasurementForDisplayText = .unitedStatesCustomary
+            $0.systemOfMeasurementForDisplayText = .imperial
             $0.language = "en_US"
+            $0.rallyMode = MQDemoOptions.shared.tripOptionsSaved["rallyMode"] == "true"
         }
     }()
     
@@ -214,6 +219,7 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     /// Clear the navigation UI if the Destination Controller gets cleared
     func clearNavigation() {
         clearNavigationUI()
+        LoggingManager.shared.navigationCanceled()
     }
     
     /// Start navigation with the selected route
@@ -232,8 +238,6 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
             self.mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
             self.mapView.setUserTrackingMode(.followWithCourse, animated: true)
         }
-        
-        delegate?.navigationStarting()
         
         if MQDemoOptions.shared.promptsAudio != .none {
             audioManager.active = true
@@ -315,6 +319,8 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     
     /// Seutp the notification system so that we can alert the user if the background timer has expired
     func setupNotifications() {
+        guard MQDemoOptions.shared.shouldAllowNotifications else { return }
+        
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
             guard granted else { return }
@@ -452,14 +458,17 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
     /// - Parameter locations: An array of locations
     private func requestRoutes(withDestinations routableDestinations: [MQRouteDestination]) {
         
-        //TODO: Once we support a list of MQIDs instead of locations, I'll need to take in an array of MQIDs
-        
         guard destinations.count > 0, let currentLocation = currentLocation else {
             OperationQueue.main.addOperation {
                 SVProgressHUD.showError(withStatus: "Could not get current location for route…")
             }
             return
         }
+        
+        LoggingManager.shared.requestRoutes()
+        
+        // Multi-route and Rally Mode only supports 1 max route
+        tripOptions.maxRoutes = ( (tripOptions.rallyMode || routableDestinations.count > 1) ? 1:3)
         
         routeService.requestRoutes(withStart: currentLocation, destinations: routableDestinations, options: tripOptions) { routes, error in
             
@@ -527,8 +536,8 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
         highlights.append(contentsOf: routeOverlayFactory.polylines(forRouteLegs: currentLegs, isActive: true))
         
         // Now draw the routes
-        mapView.remove(routeHighlightOverlays)
-        mapView.add(highlights)
+        mapView.removeOverlays(routeHighlightOverlays)
+        mapView.addOverlays(highlights)
         routeHighlightOverlays = highlights
     }
     
@@ -640,6 +649,8 @@ class NavViewController: UIViewController, UIGestureRecognizerDelegate {
         
         delegate?.reachedDestination(destination, nextDestination: nextDestination, confirmArrival: { (didArrive) in
             
+            LoggingManager.shared.userConfirmedArrival(didArrive: didArrive)
+            
             // Call the Navigation Manager callback with the result
             confirmArrival(didArrive)
 
@@ -681,6 +692,8 @@ extension NavViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
+        guard animated else { return } // Filtering out events happened during viewDidLoad
+        
         // User moved the map, which means he/she doesn't want the app to show current location
         // automatically at the app start this time, so stop location manager
         if locationManager.delegate != nil {
@@ -711,11 +724,7 @@ extension NavViewController: MGLMapViewDelegate {
     
     /// We want the destination annotations to show the callout, but not the ETAs
     func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
-        guard annotation is Destination else {
-            return false
-        }
-        
-        return true
+        return annotation is Destination || annotation is RouteSummaryAnnotation
     }
     
     /// Create the annotation views for destination and ETA
@@ -733,8 +742,7 @@ extension NavViewController: MGLMapViewDelegate {
             // If there’s no reusable annotation view available, initialize a new one.
             if annotationView == nil {
                 annotationView = RouteTimeAnnotationView(reuseIdentifier: reuseIdentifier)
-                annotationView!.frame = CGRect(origin: CGPoint.zero, size: annotationView!.size(forText: annotation.title ?? " - "))
-                
+                annotationView?.frame = CGRect(origin: CGPoint.zero, size: annotationView!.size(forText: annotation.title ?? " - "))
                 annotationView?.time = annotation.title ?? " - "
             }
             
@@ -746,13 +754,13 @@ extension NavViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        guard let _ = annotation as? Destination else { return nil }
-        
-        var annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: "Destination")
-        if annotationImage == nil {
-            annotationImage = MGLAnnotationImage(image: #imageLiteral(resourceName: "destination-pin"), reuseIdentifier: "Destination")
+        if annotation is Destination {
+            return mapView.dequeueReusableAnnotationImage(withIdentifier: "Destination") ?? MGLAnnotationImage(image: #imageLiteral(resourceName: "destination-pin"), reuseIdentifier: "Destination")
         }
-        return annotationImage
+        if annotation is RouteSummaryAnnotation {
+            return mapView.dequeueReusableAnnotationImage(withIdentifier: "Blank") ?? MGLAnnotationImage(image: blankImage(), reuseIdentifier: "Blank")
+        }
+        return nil
     }
     
     /// Select a route based on the ETA annotation the user selects
@@ -766,6 +774,14 @@ extension NavViewController: MGLMapViewDelegate {
             draw(routes: alternateRoutes)
         }
     }
+    
+    // Returns small transparent image
+    private func blankImage() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 1, height: 1), false, 0)
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return image
+    }
 }
 
 //MARK: - MQNavigationManagerDelegate
@@ -774,15 +790,21 @@ extension NavViewController: MQNavigationManagerDelegate {
     /// This is a delegate call from the Navigation Manager that allows you to update the UI or perform certain actions
     /// In this demo, we do not use it as we update our UI when the user requests the navigation to start
     func navigationManagerDidStartNavigation(_ navigationManager: MQNavigationManager) {
+        
+        delegate?.navigationStarting()
+
+        LoggingManager.shared.navigationManagerDidStartNavigation(navigationManager)
         lastCompletedRouteLeg = nil
         setupNotifications()
-        if LoggingManager.shared.shouldLog, let route = self.navigator.route {
+        if let route = self.navigator.route {
             LoggingManager.shared.start(route: route, completion: nil)
         }
     }
     
     /// This is a delegate call from the Navigation Manager after attempting to start navigation, but encountering an error
     func navigationManager(_ navigationManager: MQNavigationManager, failedToStartNavigationWithError error: Error) {
+        LoggingManager.shared.navigationManager(navigationManager, failedToStartNavigationWithError: error)
+        
         let errorCode = (error as NSError).code
         var errorDescription = ""
         
@@ -801,69 +823,69 @@ extension NavViewController: MQNavigationManagerDelegate {
     /// This is a delegate call from the Navigation Manager that allows you to update the UI or perform certain actions
     /// In this demo, we do not use it as we update our UI when the user requests the navigation to stop
     func navigationManager(_ navigationManager: MQNavigationManager, stoppedNavigation navigationStoppedReason: MQNavigationStoppedReason) {
+        LoggingManager.shared.navigationManager(navigationManager, stoppedNavigation: navigationStoppedReason)
+        
         lastCompletedRouteLeg = nil
         
         clearNavigationUI()
         
         delegate?.navigationStopped()
         
-        guard LoggingManager.shared.hasActiveLoggingSession else { return }
         LoggingManager.shared.end(reason: navigationStoppedReason == .completed ? .reachedDestination:.userEnded, completion: nil)
     }
     
      /// This is a delegate call from the Navigation Manager that allows you to update the UI or perform certain actions
     /// In this demo, we do not use it as we update our UI when the user requests the navigation to stop
     func navigationManagerDidPauseNavigation(_ navigationManager: MQNavigationManager) {
-        
+        LoggingManager.shared.navigationManagerDidPauseNavigation(navigationManager)
     }
     
     func navigationManagerDidResumeNavigation(_ navigationManager: MQNavigationManager) {
-        
+        LoggingManager.shared.navigationManagerDidResumeNavigation(navigationManager)
     }
     
     /// This is a delegate call from the Navigation Manager that allows you to update the UI or perform certain actions when a new location is observed
     /// The location observation provides the raw GPS location as well as the snapped location on the route, upcoming maneuvers, and ETA
     func navigationManager(_ navigationManager: MQNavigationManager, receivedLocationObservation locationObservation: MQLocationObservation) {
         
-        // Update the logger with the latest location info
-        func updateLogger() {
-            LoggingManager.shared.update(locationObservation: locationObservation)
-        }
-        
         // Handle the location observation
         lastLocationObservation = locationObservation
         
-        if LoggingManager.shared.hasActiveLoggingSession {
-            updateLogger()
-        }
+        LoggingManager.shared.update(locationObservation: locationObservation)
         
         updateETA()
         delegate?.update(maneuverBarDistance: locationObservation.distanceToUpcomingManeuver)
         
-        // Error bar
-        hasGPSLock = (locationObservation.rawGPSLocation.horizontalAccuracy < 100) ? true : false
-        
-        guard hasGPSLock else {
-            delegate?.update(warnings: ["GPS Lost"])
-            return
-        }
         delegate?.update(warnings: nil)
+    }
+
+    func navigationManager(_ navigationManager: MQNavigationManager, receivedInaccurateObservation location: CLLocation) {
+         // Error bar
+         delegate?.update(warnings: ["GPS Lost"])
     }
     
     /// Updates the Root View Controller with the latest maneuver information
     func navigationManager(_ navigationManager: MQNavigationManager, didUpdateUpcomingManeuver upcomingManeuver: MQManeuver) {
+        LoggingManager.shared.navigationManager(navigationManager, didUpdateUpcomingManeuver: upcomingManeuver)
         delegate?.update(maneuverBarText: upcomingManeuver.name, turnType: upcomingManeuver.type, maneuverTypeText: upcomingManeuver.typeText)
     }
     
     /// The Navigation Manager determines that the user has reached the destination
     func navigationManager(_ navigationManager: MQNavigationManager, reachedDestination routeDestination: MQRouteDestination, for completedRouteLeg: MQRouteLeg, isFinalDestination: Bool, confirmArrival: @escaping MQConfirmArrivalBlock) {
         
+        LoggingManager.shared.navigationManager(navigationManager, reachedDestination: routeDestination, for: completedRouteLeg, isFinalDestination: isFinalDestination, confirmArrival: confirmArrival)
         updateDestination(reachedDestination: routeDestination, forCompletedRouteLeg: completedRouteLeg, isFinalDestination: isFinalDestination, requestUserAcceptance: true, confirmArrival: confirmArrival)
+    }
+    
+    func navigationManagerWillUpdateETA(_ navigationManager: MQNavigationManager) {
+        LoggingManager.shared.navigationManagerWillUpdateETA(navigationManager)
     }
     
     /// The Navigation Manager has updated the ETA with a new one
     func navigationManagerDidUpdateETA(_ navigationManager: MQNavigationManager, withETAByRouteLegId etaByRouteLegId: [String : MQEstimatedTimeOfArrival]) {
         updateETA()
+        
+        LoggingManager.shared.navigationManagerDidUpdateETA(navigationManager, withETAByRouteLegId: etaByRouteLegId)
         
         guard MQDemoOptions.shared.promptsAudio == .always, let currentLegETA = currentRouteLeg?.traffic.estimatedTimeOfArrival.time?.timeIntervalSinceNow else { return }
         let shortDateFormatter: DateFormatter = {
@@ -889,13 +911,15 @@ extension NavViewController: MQNavigationManagerDelegate {
     
     /// The Navigation Manager will be updating traffic
     func navigationManagerWillUpdateTraffic(_ navigationManager: MQNavigationManager) {
+        LoggingManager.shared.navigationManagerWillUpdateTraffic(navigationManager)
         trafficRequestLocation = lastLocationObservation?.rawGPSLocation
         trafficRequestDate = Date()
     }
     
     /// The Navigation Manager has updated traffic. This is a good time to update the routes with new traffic info
-    private func navigationManagerDidUpdateTraffic(_ navigationManager: MQNavigationManager, withTrafficByRouteLegId trafficByRouteLegId: [AnyHashable: Any]) {
+    func navigationManagerDidUpdateTraffic(_ navigationManager: MQNavigationManager, withTrafficByRouteLegId trafficByRouteLegId: [String : MQTraffic]) {
 //        SVProgressHUD.showInfo(withStatus: "🚗🚙Traffic Update🚕🚗")
+        LoggingManager.shared.navigationManagerDidUpdateTraffic(navigationManager, withTrafficByRouteLegId: trafficByRouteLegId)
         draw(routes: [selectedRoute!])
         AudioServicesPlaySystemSound (1057)
     }
@@ -909,10 +933,12 @@ extension NavViewController: MQNavigationManagerDelegate {
             trafficRequestDate = nil
         }
 
+        LoggingManager.shared.navigationManager(navigationManager, foundTrafficReroute: route)
+        
         // Draw the updated reroute
         draw(routes: [route])
         
-        // Zoominto the updated route
+        // Zoom into the updated route
         if let annotations = mapView.annotations {
             mapView.showAnnotations(annotations, animated: true)
         }
@@ -923,11 +949,9 @@ extension NavViewController: MQNavigationManagerDelegate {
             self.startNav(trafficReroute: true)
             self.updateETA()
             
-            if LoggingManager.shared.hasActiveLoggingSession {
-                LoggingManager.shared.update(route: route, reason: .traffic)
-            }
+            LoggingManager.shared.update(route: route, reason: .traffic)
             
-            guard let trd = self.trafficRequestDate, let trl = self.trafficRequestLocation, LoggingManager.shared.hasActiveLoggingSession else { return }
+            guard let trd = self.trafficRequestDate, let trl = self.trafficRequestLocation else { return }
             
             LoggingManager.shared.startReroute(location: trl, requestedTime: trd, receivedTime: Date(), geofenceRadius: 0 as NSNumber, rerouteDelay: 0 as NSNumber, receivedRoute: route, result: .accepted)
             
@@ -937,7 +961,7 @@ extension NavViewController: MQNavigationManagerDelegate {
                 self.draw(routes: [self.selectedRoute!])
                 self.mapView.setUserTrackingMode(.followWithCourse, animated: true)
 
-                guard let trd = self.trafficRequestDate, let trl = self.trafficRequestLocation, LoggingManager.shared.hasActiveLoggingSession else { return }
+                guard let trd = self.trafficRequestDate, let trl = self.trafficRequestLocation else { return }
                 
                 LoggingManager.shared.startReroute(location: trl, requestedTime: trd, receivedTime: Date(), geofenceRadius: 0 as NSNumber, rerouteDelay: 0 as NSNumber, receivedRoute: route, result: .cancelled)
                 
@@ -950,6 +974,7 @@ extension NavViewController: MQNavigationManagerDelegate {
     }
     
     func navigationManagerShouldReroute(_ navigationManager: MQNavigationManager) -> Bool {
+        _ = LoggingManager.shared.navigationManagerShouldReroute(navigationManager)
         return self.shouldReroute;
     }
     
@@ -959,7 +984,7 @@ extension NavViewController: MQNavigationManagerDelegate {
         AudioServicesPlaySystemSound (1057)
         AudioServicesPlaySystemSound (1057)
 
-        guard LoggingManager.shared.hasActiveLoggingSession else { return }
+        LoggingManager.shared.navigationManager(navigationManager, didReroute: route)
         LoggingManager.shared.update(route: route, reason: .reroute)
     }
     
@@ -967,7 +992,9 @@ extension NavViewController: MQNavigationManagerDelegate {
     ///  - Got back on route and reroute cancelled
     func navigationManagerDiscardedReroute(_ navigationManager: MQNavigationManager) {
         
-        guard LoggingManager.shared.hasActiveLoggingSession, let rrl = rerouteRequestLocation, let rrd = rerouteRequestDate else { return }
+        LoggingManager.shared.navigationManagerDiscardedReroute(navigationManager)
+        
+        guard let rrl = rerouteRequestLocation, let rrd = rerouteRequestDate else { return }
         
         LoggingManager.shared.startReroute(location: rrl, requestedTime: rrd, receivedTime: Date(), geofenceRadius: 0 as NSNumber, rerouteDelay: 0 as NSNumber, receivedRoute: nil, result: .cancelled)
         
@@ -977,6 +1004,8 @@ extension NavViewController: MQNavigationManagerDelegate {
     
     /// The Navigation Manager has received new speed limit info
     func navigationManager(_ navigationManager: MQNavigationManager, crossedSpeedLimitBoundariesWithExitedZones exitedSpeedLimits: Set<MQSpeedLimit>?, enteredZones enteredSpeedLimits: Set<MQSpeedLimit>?) {
+        
+        LoggingManager.shared.navigationManager(navigationManager, crossedSpeedLimitBoundariesWithExitedZones: exitedSpeedLimits, enteredZones: enteredSpeedLimits)
         
         guard let updateSpeedLimit = delegate?.update(speedLimit:) else { return }
         
@@ -997,6 +1026,8 @@ extension NavViewController: MQNavigationManagerDelegate {
  
     /// Called when the app is in the background and navigating, but has not moved enough in a period of time
     func navigationManagerBackgroundTimerExpired(_ navigationManager: MQNavigationManager) {
+        LoggingManager.shared.navigationManagerBackgroundTimerExpired(navigationManager)
+        
         let content = UNMutableNotificationContent()
         content.title = "Do you wish to continue navigating to \(currentDestination?.displayTitle ?? "")?"
         content.body = "You haven't moved in awhile while navigation has been in the background. Please let us know if you wish to continue navigating."
@@ -1009,6 +1040,72 @@ extension NavViewController: MQNavigationManagerDelegate {
         center.removeAllPendingNotificationRequests()
         center.add(request, withCompletionHandler: nil)
     }
+    
+    // MARK: Tap on POI
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    private func poiTouched(_ poi:MQNamedPlace) {
+        guard let currentLocation = currentLocation else {
+            OperationQueue.main.addOperation {
+                SVProgressHUD.showError(withStatus: "Could not get current location…")
+            }
+            return
+        }
+        
+        let geoAddress = MQGeoAddress()
+        geoAddress.coordinate = poi.coordinate
+        geoAddress.mqid = poi.mqid
+        guard let destination = Destination(geoAddress: geoAddress) else { return }
+
+        
+        routeService.requestRouteSummary(withStart: currentLocation, destination: destination) { (estimatedTimeOfArrival, trafficConditions, routeLength, error) in
+            OperationQueue.main.addOperation {
+                self.showRouteSummary(poi: poi, routeFound: (error == nil), estimatedTimeOfArrival: estimatedTimeOfArrival, trafficConditions: trafficConditions, routeLength: routeLength)
+            }
+        }
+    }
+    
+    private func showRouteSummary(poi:MQNamedPlace, routeFound: Bool, estimatedTimeOfArrival: MQEstimatedTimeOfArrival?, trafficConditions: MQTrafficOverview, routeLength: CLLocationDistance) {
+        
+        // Remove previous route summary annotation, because otherwise it would stay hidden on the map and prevent adding another annotation into the same area
+        removeRouteSummaryAnnotations()
+        
+        let annotation = RouteSummaryAnnotation()
+        annotation.coordinate = poi.coordinate
+        annotation.title = poi.name
+        
+        if !routeFound {
+            annotation.subtitle = "Route not accessible"
+        } else {
+            guard let eta = estimatedTimeOfArrival?.time else { return }
+            if eta.timeIntervalSinceNow < 0 {
+                annotation.subtitle = "You are nearby"
+            } else {
+                let durationString = duration(forRouteTime: eta.timeIntervalSinceNow) ?? ""
+                let distanceString = descriptiveLabel(forDistance: routeLength)
+                annotation.subtitle = "\(durationString) (\(distanceString))"
+            }
+        }
+        mapView.addAnnotation(annotation)
+        mapView.selectAnnotation(annotation, animated: true)
+    }
+    
+    private func removeRouteSummaryAnnotations() {
+        if let annotations = mapView.annotations?.filter({ $0 is RouteSummaryAnnotation }) {
+            mapView.removeAnnotations(annotations)
+        }
+    }
+}
+
+//MARK: - MQMapViewPOIDelegate
+extension NavViewController: MQMapViewPOIDelegate {
+    
+    ///User tapped on a Point Of Interest on the map - this is only available with a Map Style that includes POIs
+    func mapView(_ mapView: MGLMapView, didTapOnPOI poi: MQNamedPlace!) {
+        self.poiTouched(poi)
+    }
 }
 
 //MARK: - MQNavigationManagerPromptDelegate
@@ -1018,7 +1115,7 @@ extension NavViewController: MQNavigationManagerPromptDelegate {
     func navigationManager(_ navigationManager: MQNavigationManager, receivedPrompt promptToSpeak: MQPrompt, userInitiated: Bool) {
         let startTime = Date()
         let promptLoggingEntry: PromptPlayEntry? = {
-            guard LoggingManager.shared.hasActiveLoggingSession, let currentRouteLeg = self.currentRouteLeg else { return nil }
+            guard let currentRouteLeg = self.currentRouteLeg else { return nil }
             return LoggingManager.shared.recordPromptReceived(prompt: promptToSpeak, routeLeg: currentRouteLeg)
         }()
         
@@ -1047,7 +1144,7 @@ extension NavViewController {
     /// - Parameter completion: A completion block that we'll pass back the array of routable locations
     private func requestRoutableLocations(completion: @escaping (([MQRouteDestination]?)-> Void)) {
         
-        guard var urlComponents = URLComponents(string: "https://www.mapquestapi.com/geocoding/v1/batch") else {
+        guard var urlComponents = URLComponents(string: "https://www.mapquestapi.com/geocoding/v1/batch"), let appKey = Bundle.main.object(forInfoDictionaryKey: "MQApplicationKey") as? String else {
             completion(nil)
             return
         }
@@ -1057,7 +1154,7 @@ extension NavViewController {
         // Setup the URL
         let defaultSession = URLSession(configuration: .default)
         var queryItems = [URLQueryItem]()
-        queryItems.append(URLQueryItem(name: "key", value: Bundle.main.object(forInfoDictionaryKey: "MQApplicationKey") as! String!))
+        queryItems.append(URLQueryItem(name: "key", value: appKey))
         queryItems.append(URLQueryItem(name: "inFormat", value: "kvp"))
         queryItems.append(URLQueryItem(name: "outFormat", value: "json"))
         queryItems.append(URLQueryItem(name: "thumbMaps", value: "false"))
@@ -1067,7 +1164,7 @@ extension NavViewController {
         // Ignore the destinations that don't need geocoding
         destinations.forEach { destination in
             //We don't want to geocode destinations that already have an mqid or routeableLocation
-            if destination.mqid == nil, destination.routeableLocation == nil, let value = destination.geoAddress.singleLineString(), value.isEmpty == false {
+            if destination.mqid == nil, destination.routeableLocation == nil, let value = destination.geoAddress?.singleLineString(), value.isEmpty == false {
                 queryItems.append(URLQueryItem(name: "location", value: value))
             }
         }
@@ -1102,7 +1199,7 @@ extension NavViewController {
             
             // The assumption here is that since we are only geocoding for Destinations that we have no mqID or routableLocation, the first one in the list is the one we're going to set the new routableLocation in
             func firstAvailableDestination() -> Destination? {
-                return routeableLocations.first { $0.routeableLocation == nil && $0.mqid == nil && $0.geoAddress.singleLineString().isEmpty == false }
+                return routeableLocations.first { $0.routeableLocation == nil && $0.mqid == nil && $0.geoAddress?.singleLineString().isEmpty == false }
             }
             
             // Once we're done with any aspect of this - send back the routable locations

@@ -351,9 +351,10 @@ extension RootViewController: NavViewControllerDelegate {
     /// Navigation View Controller Delegate call that navigation is starting
     /// Sets up the UI properly for a newly started navigation session
     func navigationStarting() {
-        navHatManeuverLabel.text = "Go to the route…"
+        navHatManeuverLabel.text = nil
         navHatManeuverIcon.image = #imageLiteral(resourceName: "navatar_location")
-        navHatManeuverTypeTextLabel.text = "   "
+        navHatManeuverTypeTextLabel.text = nil
+        navHatDistanceLabel.text = nil
         navHatViewTopConstraint.constant = 0.0
         bottomBarBottomConstraint.constant = 0
         UIView.animate(withDuration: 0.3) {
@@ -388,7 +389,10 @@ extension RootViewController: NavViewControllerDelegate {
     
     /// Navigation View Controller Delegate call to update the next upcoming manuver distance
     func update(maneuverBarDistance distance: CLLocationDistance) {
-        navHatDistanceLabel.text = distance < 0.0 ? "" : descriptiveLabel(forDistance: distance)
+        
+        // If the distance is zero or less, we won't show a distance
+        
+        navHatDistanceLabel.text = distance <= 0.0 ? nil : descriptiveLabel(forDistance: distance)
     }
     
     /// Navigation View Controller Delegate call to update the next upcoming manuver text and image

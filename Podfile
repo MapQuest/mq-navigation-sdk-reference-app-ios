@@ -5,10 +5,10 @@ target 'MQDemo' do
   use_frameworks!
   platform :ios, '11.0'
 
-  pod 'MapQuestMaps', '~>3.4.1-1.1'
+  pod 'MapQuestMaps', '~>4.0.0'
   pod 'MQSearchAhead', '~> 1.0.0'
-  pod 'MQCore', '~> 1.0.0-beta.4'
-  pod 'MQNavigation', '~> 3.3.0'
+  pod 'MQCore', '~> 1.0.0-beta.7'
+  pod 'MQNavigation', '~> 3.4.0'
 
   pod 'Pulley'
   pod 'SVProgressHUD', :git => 'https://github.com/sridvijay/SVProgressHUD.git', :inhibit_warnings => true
