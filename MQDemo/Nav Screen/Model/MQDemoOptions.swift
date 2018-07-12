@@ -87,6 +87,9 @@ class MQDemoOptions {
         }
     }
     
+    var shouldAllowNotifications = true
+    var tripOptionsSaved : [String:String] = [:]
+
     // Destination places
     private(set) var mostRecentlyUsedDestinations: [Destination]!
     var workPlace: Destination? {

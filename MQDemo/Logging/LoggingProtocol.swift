@@ -83,12 +83,14 @@ public class PromptPlayEntry : NSObject {
 }
 
 //MARK: -
-protocol SessionLoggingProtocol {
+protocol SessionLoggingProtocol : MQNavigationManagerDelegate {
     var hasActiveLoggingSession : Bool { get }
     var currentSessionId: String? { get }
     var userString: String? { get set }
     var navigationManager: MQNavigationManager? { get set }
 
+    func requestRoutes()
+    
     func start(route: MQRoute, completion: ((_ sessionID: String?)->Void)?)
     func end(reason: SessionEndReason, completion: ((_ promptPlayHistory: [PromptPlayEntry])->Void)?)
 
@@ -103,4 +105,8 @@ protocol SessionLoggingProtocol {
     func recordPromptPlayed(entry: PromptPlayEntry, start: Date, end: Date, interrupted: Bool)
     
     func specialMenuAction(presenting viewController: UIViewController, view: UIView)
+    
+    func navigationCanceled()
+    
+    func userConfirmedArrival(didArrive: Bool)
 }

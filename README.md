@@ -129,4 +129,4 @@ For more information on the MapQuest Navigation SDK, check out: <https://develop
 
 For more information on the MapQuest Maps SDK, check out: <https://developer.mapquest.com/documentation/ios-sdk/>
 
-For more information on the MapQuest SearchAhead SDK, check out: <https://developer.mapquest.com/documentation/searchahead-api/>
+For more information on the MapQuest SearchAhead SDK, check out: <https://developer.mapquest.com/documentation/searchahead-sdk/ios/>

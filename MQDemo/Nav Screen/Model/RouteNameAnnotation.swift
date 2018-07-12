@@ -24,6 +24,8 @@ class RouteTimeAnnotationView: MGLAnnotationView {
             textLayer.font = UIFont.systemFont(ofSize: 11, weight: .medium)
             self.textLayer = textLayer
             addSubview(textLayer)
+            
+            self.accessibilityIdentifier = time
         }
     }
     

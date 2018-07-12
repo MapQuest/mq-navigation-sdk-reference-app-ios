@@ -29,8 +29,7 @@ class Destination: MQPlace, MGLAnnotation, MQRouteDestination {
         subtitle = place.subtitle
         coordinate = place.coordinate
         isNavigable = place.isNavigable
-        
-        displayTitle = title
+        displayTitle = title ?? ""
         displaySubtitle = subtitle
     }
     
@@ -60,11 +59,7 @@ class Destination: MQPlace, MGLAnnotation, MQRouteDestination {
         }
         return CLLocation(latitude: self.coordinate.latitude, longitude: self.coordinate.longitude)
     }
-    
-    /// Mapquest Point Of Interest ID, used for routing purposes
-    var mqid: String? {
-        return allowMQIDRouting ? geoAddress?.mqid : nil
-    }
+
     /// A routeable location that we can store from geocoding or from dropping a pin on a map
     var routeableLocation : CLLocation?
     

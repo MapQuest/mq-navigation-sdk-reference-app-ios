@@ -29,7 +29,7 @@ class TripDetailViewController: UITableViewController {
     private let switchCellIdentifier = "switch"
     private let listItemCellIdentifier = "listItem"
     private let languages: [Language] = [ .englishUS, .spanishUS ]
-    private let measurementUnits: [MQSystemOfMeasurement] = [ .unitedStatesCustomary, .metric ]
+    private let measurementUnits: [MQSystemOfMeasurement] = [ .imperial, .metric ]
     
     private enum Language: String {
         case englishUS = "en_US"
@@ -54,6 +54,7 @@ class TripDetailViewController: UITableViewController {
         case allowInformationSharing
         case measurementUnits
         case navigationLanguage
+        case rallyMode
     }
     
     private let driveOption: [Option] = [
@@ -64,6 +65,7 @@ class TripDetailViewController: UITableViewController {
         .avoidInternationalBorders,
         .avoidSeasonalClosures,
         .allowOffRouteReroutes,
+        .rallyMode
         ]
     
     private let systemOption: [Option] = [
@@ -150,7 +152,7 @@ class TripDetailViewController: UITableViewController {
         guard indexPath.section > 0, let cell = tableView.cellForRow(at: indexPath), let option = optionForIndexPath(indexPath) else { return }
         
         switch option {
-        case .avoidTolls, .avoidHighways, .avoidFerries, .avoidUnpaved, .avoidInternationalBorders, .avoidSeasonalClosures: break
+        case .avoidTolls, .avoidHighways, .avoidFerries, .avoidUnpaved, .avoidInternationalBorders, .avoidSeasonalClosures, .rallyMode: break
         case .allowOffRouteReroutes, .allowInformationSharing: break
         case .measurementUnits:
             guard let vc = storyboard?.instantiateViewController(withIdentifier: "ListTableViewController") as? ListTableViewController else {
@@ -223,7 +225,7 @@ class TripDetailViewController: UITableViewController {
     // MARK: - Helpers
     private func userFriendlyMeasurementSystem(_ measurementSystem: MQSystemOfMeasurement) -> String {
         switch measurementSystem {
-        case .unitedStatesCustomary: return "US"
+        case .imperial: return "US"
         case .metric: return "Metric"
         }
     }
@@ -262,6 +264,10 @@ class TripDetailViewController: UITableViewController {
             return switchCell(text: "Allow Information Sharing", value: MQDemoOptions.shared.userLocationTrackingConsentStatus == .granted, for: indexPath, valueChangedBlock: { (selected: Bool) in
                 MQDemoOptions.shared.userLocationTrackingConsentStatus = selected ? .granted : .denied
                 self.delegate?.consentChanged()
+            })
+        case .rallyMode:
+            return switchCell(text: "Planning/Rally Mode", value: delegate?.tripOptions.rallyMode ?? false, for: indexPath, valueChangedBlock: { (selected: Bool) in
+                self.delegate?.tripOptions.rallyMode = selected
             })
         case .measurementUnits:
             var title: String? = nil

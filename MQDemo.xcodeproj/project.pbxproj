@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		092EE4442BF54B38DD419C42 /* Pods_MQDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 640329D91D46E0B20E6BBDCC /* Pods_MQDemo.framework */; };
 		4BAD57F41FB1137F003ECF99 /* InstructionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BAD57F31FB1137F003ECF99 /* InstructionsTableViewCell.swift */; };
 		C52977791FACD30D00818336 /* DestinationUpdaterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52977781FACD30D00818336 /* DestinationUpdaterProtocol.swift */; };
 		C54F11171FC387D2007328C5 /* MQDemoOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54F11151FC387D2007328C5 /* MQDemoOptions.swift */; };
@@ -55,7 +56,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4B981957208A7F8E00A233E5 /* DVR.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DVR.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BAD57F31FB1137F003ECF99 /* InstructionsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsTableViewCell.swift; sourceTree = "<group>"; };
+		640329D91D46E0B20E6BBDCC /* Pods_MQDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MQDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		80B595491B8CD40C1CC2D6AB /* Pods-MQDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MQDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-MQDemo/Pods-MQDemo.release.xcconfig"; sourceTree = "<group>"; };
 		C52977781FACD30D00818336 /* DestinationUpdaterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationUpdaterProtocol.swift; sourceTree = "<group>"; };
 		C54F11151FC387D2007328C5 /* MQDemoOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQDemoOptions.swift; sourceTree = "<group>"; };
 		C54F11161FC387D2007328C5 /* RouteNameAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteNameAnnotation.swift; sourceTree = "<group>"; };
@@ -107,17 +111,30 @@
 		C5DC54FE1FB4B1140076C7F1 /* raleway-regular-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-regular-webfont.ttf"; sourceTree = "<group>"; };
 		C5DC54FF1FB4B1140076C7F1 /* raleway-semibold-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "raleway-semibold-webfont.ttf"; sourceTree = "<group>"; };
 		C5E7E4431FF4169A000EAAFB /* InstructionsPageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsPageController.swift; sourceTree = "<group>"; };
+		EFE5AD7A33743201D29DFA06 /* Pods-MQDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MQDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MQDemo/Pods-MQDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C5641FC11FAA511A00CCAC91 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
+			files = (
+				092EE4442BF54B38DD419C42 /* Pods_MQDemo.framework in Frameworks */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8FB176A82C53F8DC9D479132 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EFE5AD7A33743201D29DFA06 /* Pods-MQDemo.debug.xcconfig */,
+				80B595491B8CD40C1CC2D6AB /* Pods-MQDemo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		C5641FBB1FAA511A00CCAC91 = {
 			isa = PBXGroup;
 			children = (
@@ -125,6 +142,7 @@
 				C5641FF11FAA5CE600CCAC91 /* MQDemo */,
 				C5641FC51FAA511A00CCAC91 /* Products */,
 				F7A8B2E3A162519456FDCE99 /* Frameworks */,
+				8FB176A82C53F8DC9D479132 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -260,6 +278,8 @@
 		F7A8B2E3A162519456FDCE99 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4B981957208A7F8E00A233E5 /* DVR.framework */,
+				640329D91D46E0B20E6BBDCC /* Pods_MQDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -271,9 +291,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C5641FD61FAA511A00CCAC91 /* Build configuration list for PBXNativeTarget "MQDemo" */;
 			buildPhases = (
+				CAF27F1D1A3FEC62706BE650 /* [CP] Check Pods Manifest.lock */,
 				C5641FC01FAA511A00CCAC91 /* Sources */,
 				C5641FC11FAA511A00CCAC91 /* Frameworks */,
 				C5641FC21FAA511A00CCAC91 /* Resources */,
+				CEDD873DBC1EAE47A3B96930 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -338,6 +360,61 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		CAF27F1D1A3FEC62706BE650 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MQDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CEDD873DBC1EAE47A3B96930 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-MQDemo/Pods-MQDemo-frameworks.sh",
+				"${PODS_ROOT}/MQCore/MQCore-1.0.0-beta.7/MQCore.framework",
+				"${PODS_ROOT}/MQNavigation/MQNavigation-3.4.0/MQNavigation.framework",
+				"${PODS_ROOT}/MapQuestMaps/MapQuestMaps-4.0.0/MapQuestMaps.framework",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework",
+				"${PODS_ROOT}/Mapbox-iOS-SDK/dynamic/Mapbox.framework.dSYM",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/Pulley/Pulley.framework",
+				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
+				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MQCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MQNavigation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapQuestMaps.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/Mapbox.framework.dSYM",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Pulley.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MQDemo/Pods-MQDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C5641FC01FAA511A00CCAC91 /* Sources */ = {
@@ -516,14 +593,19 @@
 		};
 		C5641FD71FAA511A00CCAC91 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFE5AD7A33743201D29DFA06 /* Pods-MQDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J2244V2577;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/MQDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapquest.sample.MQ-Navigation-Reference";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/MQDemo-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -531,14 +613,18 @@
 		};
 		C5641FD81FAA511A00CCAC91 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80B595491B8CD40C1CC2D6AB /* Pods-MQDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J2244V2577;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/MQDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapquest.sample.MQ-Navigation-Reference";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_NAME)/MQDemo-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
